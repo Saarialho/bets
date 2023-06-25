@@ -21,7 +21,7 @@ get_main_leagues <- function(URL){
   liigat <- c("E0", "D1", "SP1", "SP2", "I1", "F1", "D2", "E1", "P1", "N1")
 
   Mainleagues <- purrr:::map(Mainleagues, dplyr::select, league = Div, date = Date,
-                     Home = HomeTeam, Away = AwayTeam, PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
+                     home = HomeTeam, away = AwayTeam, PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
     dplyr::bind_rows() %>%
     na.omit() %>%
     dplyr::filter(league %in% liigat) %>%
@@ -39,7 +39,10 @@ get_main_leagues <- function(URL){
     tibble::as_tibble() %>%
     dplyr::select(mHxg = 1, mAxg = 2) %>%
     dplyr::bind_cols(Mainleagues) %>%
-    dplyr::select(league:PSCA, FHP:FAP, FTR:FTAG, mHxg, mAxg)
+    dplyr::select(league:PSCA, FHP:FAP, FTR:FTAG, mHxg, mAxg) %>%
+    dplyr::mutate(across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+    dplyr::mutate(across(c(home, away), ~tolower(.))) %>%
+    dplyr::mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]")))
 
 }
 #' get extra leagues data from buchdal
@@ -68,7 +71,7 @@ get_extra_leagues <- function(URL){
     )
 
   Mainleagues <- purrr:::map(Mainleagues, dplyr::select, league = League, date = Date, season = Season,
-                     Home, Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
+                     home = Home, away = Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
     dplyr::bind_rows() %>%
     na.omit() %>%
     dplyr::filter(!stringr::str_detect(league, 'Copa')) %>%
@@ -89,6 +92,9 @@ get_extra_leagues <- function(URL){
     tibble::as_tibble() %>%
     dplyr::select(mHxg = 1, mAxg = 2) %>%
     dplyr::bind_cols(Mainleagues) %>%
-    dplyr::select(league:PSCA, FHP:FAP, FTR:FTAG, mHxg, mAxg)
+    dplyr::select(league:PSCA, FHP:FAP, FTR:FTAG, mHxg, mAxg) %>%
+    dplyr::mutate(across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+    dplyr::mutate(across(c(home, away), ~tolower(.))) %>%
+    dplyr::mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]")))
 
 }

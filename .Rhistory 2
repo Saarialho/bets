@@ -1,0 +1,418 @@
+usethis::use_git()
+usethis::use_github()
+usethis::use_github()
+usethis::use_r("strsplit1")
+devtools::load_all()
+check()
+library(usethis)
+check()
+library(devtools)
+check()
+check()
+use_mit_license()
+document()
+document()
+document()
+document()
+check()
+document()
+check()
+document()
+check()
+devtools::load_all()
+document()
+check()
+document()
+check()
+document()
+document()
+check()
+use_testthat()
+use_test("strsplit1")
+test()
+document()
+test()
+use_package("stringr")
+rename_files("strsplit1", "str_split_one")
+document()
+use_test("str_split_one")
+document()
+load_all()
+str_split_one("a, b, c", pattern = ", ")
+use_readme_rmd()
+build_readme()
+check()
+install()
+usethis::use_package("tidyverse")
+usethis::use_package("dplyr")
+usethis::use_package("tidyr")
+usethis::use_package("purrr")
+usethis::use_package("tidymodels")
+usethis::use_package("goalmodel")
+usethis::use_package("pinnacle.API")
+usethis::use_package("xgboost")
+usethis::use_package("implied")
+usethis::use_package("lubridate")
+usethis::use_package("skimr")
+usethis::use_package("glmnet")
+usethis::use_package("finetune")
+usethis::use_package("recipes")
+usethis::use_package("stacks")
+usethis::use_package("qs")
+usethis::use_package("bundle")
+usethis::use_package("readxl")
+usethis::use_package("ggplot2")
+usethis::use_package("parsnip")
+usethis::use_package("tibble")
+usethis::use_package("workflows")
+usethis::use_package("workflowsets")
+usethis::use_package("tune")
+usethis::use_package("yardstick")
+usethis::use_package("hardhat")
+usethis::use_package("dials")
+usethis::use_package("conflicted")
+usethis::use_package("broom")
+usethis::use_package("cli")
+usethis::use_package("rlang")
+usethis::use_package("rsample")
+usethis::use_package("recipes")
+usethis::use_package("worldfootballR")
+devtools::document()
+devtools::load_all()
+library(worldfootballR)
+library(tidyverse)
+?fb_match_results
+seasons <- c(2022, 2023)
+first_tier <- fb_match_results(country = c("ENG", "ESP", "ITA", "GER", "FRA", 'USA', 'NED', 'MEX', 'POR'),
+gender = "M",
+season_end_year = seasons,
+tier = c("1st"))
+second_tier <- fb_match_results(country = c("ENG"), gender = "M",
+season_end_year = seasons,
+tier = c("2st"))
+seasons
+fb_match_results(country = c("ENG"),
+gender = "M",
+season_end_year = seasons,
+tier = c("1st"))
+second_tier <- fb_match_results(country = c("ENG"), gender = "M",
+season_end_year = seasons,
+tier = c("2nd"))
+first_tier %>%
+bind_cols(second_tier)
+first_tier %>%
+bind_rows(second_tier)
+first_tier %>%
+bind_rows(second_tier) %>%
+as_tibble() %>%
+select(league = Competition_Name, season = Season_End_Year, date = Date,
+home = Home, hg = HomeGoals, h_xg = Home_xg, away = Away,
+ag = AwayGoals, a_xg = Away_xG)
+first_tier %>%
+bind_rows(second_tier) %>%
+as_tibble() %>%
+select(league = Competition_Name, season = Season_End_Year, date = Date,
+home = Home, hg = HomeGoals, h_xg = Home_xG, away = Away,
+ag = AwayGoals, a_xg = Away_xG)
+first_tier %>%
+bind_rows(second_tier) %>%
+as_tibble() %>%
+select(league = Competition_Name, season = Season_End_Year, date = Date,
+home = Home, away = Away, hg = HomeGoals, ag = AwayGoals, h_xg = Home_xG, a_xg = Away_xG)
+use_r("get_fbref_data")
+document()
+load_all()
+get_fbref_data(c(2022))
+check()
+use_package('magittr')
+first_tier %>% skimr::skim()
+Sys.getenv('PSWRD')
+use_r("log_in_pinnacle")
+use_r("get_pinnacle_odds")
+document()
+document()
+load_all()
+use_r("get_buchdal_data")
+document()
+document()
+document()
+document()
+use_r('replace_buch_with_pinnacle')
+document()
+use_r('kelly_bet')
+document()
+install()
+load()
+load_all()
+data_path <- "/Users/eerosaarialho/OneDrive - Aalto University/Bets/Rbets"
+configs <- read_rds(file.path(data_path, 'model_configs2.rds'))
+configs <- readr::read_rds(file.path(data_path, 'model_configs2.rds'))
+configs
+use_data(configs)
+hist_arviot <- qread(file.path(data_path, "multimodel_arviot.rds"))
+hist_arviot <- qs::qread(file.path(data_path, "multimodel_arviot.rds"))
+hist_bets <- qs::qread(file.path(data_path, "multimodel_bets.rds"))
+use_data(hist_arviot)
+use_data(hist_bets)
+rm(hist_arviot)
+hist_arviot
+library(hist_arviot)
+bets::configs
+document()
+document()
+load_all
+load_all()
+bets::configs
+configs
+hist_arviot
+hist_bets
+qs::qread(file.path(data_path, 'clv_stack.rds'))
+clvpred_model <- qs::qread(file.path(data_path, 'clv_stack.rds'))
+use_data(clvpred_model)
+document()
+load_all()
+clvpred_model
+use_r('fit_multimixture_model')
+document()
+document()
+use_r('predict_1x2')
+document()
+str(goalmodel::goalmodel)
+load_all()
+seq(2010, 2023, 1)
+seasons <- seq(2010, 2023, 1)
+seasons <- seq(2010, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
+rlang::last_trace()
+seasons <- seq(2012, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
+seasons <- seq(2018, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
+fbref_data
+fbref_data %>% skimr::skim()
+fbref_data
+fbref_data %>%
+distinct(home)
+load_all()
+use_r('attach')
+use_r('conflicts')
+document()
+load_all()
+use_r(zzz)
+use_r('zzz')
+document()
+use_r('utils')
+document()
+load()
+load_all()
+fbref_data %>%
+distinct(home)
+fbref_data %>%
+distinct(home) %>%
+arrange(home)
+fbref_data %>%
+distinct(home) %>%
+mutate(across(starts_with('home'), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+arrange(home)
+fbref_team_names <- fbref_data %>%
+distinct(home) %>%
+mutate(across(starts_with('home'), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+arrange(home)
+use_data(fbref_team_names)
+View(fbref_team_names)
+View(fbref_data)
+Read_excel_files <- function(URL){
+if(str_detect(URL, "xlsx")){
+temp = tempfile(fileext = ".xlsx")
+} else {
+temp = tempfile(fileext = ".xls")
+}
+download.file(URL, destfile=temp, mode='wb')
+Mainleagues <- temp %>%
+excel_sheets() %>%
+set_names() %>%
+map(read_excel, path = temp)
+Mainleagues <- Mainleagues %>%
+keep(~has_element(names(.),"PSCH")) %>%
+keep(~has_element(names(.),"PSH"))
+Mainleagues <- map(Mainleagues, select, league = Div, date = Date, Home = HomeTeam, Away = AwayTeam, PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
+bind_rows() %>%
+na.omit()
+}
+Read_new_leagues <- function(URL){
+if(str_detect(URL, "xlsx")){
+temp = tempfile(fileext = ".xlsx")
+} else {
+temp = tempfile(fileext = ".xls")
+}
+download.file(URL, destfile=temp, mode='wb')
+Mainleagues <- temp %>%
+excel_sheets() %>%
+set_names() %>%
+map(read_excel, path = temp)
+Mainleagues <- Mainleagues %>%
+keep(~has_element(names(.),"PH")) %>%
+keep(names(.) %in% c("USA","MEX",'BRA')) %>%
+map(~mutate(., Season = as.character(Season))) %>%
+map(~mutate(., Season = substr(Season, 1, 4)))
+Mainleagues <- map(Mainleagues, select, league = League, date = Date, season = Season, Home, Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
+bind_rows() %>%
+na.omit()
+}
+Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx')
+pacman::p_load(tidyverse, readxl, purrr, furrr, implied, lubridate, stringi, stringr, goalmodel, skimr, tictoc, tidytable, progressr, rms)
+new_leagues <- Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx') %>%
+filter(str_detect(league, 'MLS|Liga MX')) %>%
+mutate(date = as_date(date)) %>%
+filter(season >= 2018) %>%
+mutate(season = case_when(season == '2018' ~ '1819',
+season == '2019' ~ '1920',
+season == '2020' ~ '2021',
+season == '2021' ~ '2122'
+season == '2022' ~ '2123'))
+new_leagues <- Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx') %>%
+filter(str_detect(league, 'MLS|Liga MX')) %>%
+mutate(date = as_date(date)) %>%
+filter(season >= 2018) %>%
+mutate(season = case_when(season == '2018' ~ '1819',
+season == '2019' ~ '1920',
+season == '2020' ~ '2021',
+season == '2021' ~ '2122',
+season == '2022' ~ '2123'))
+new_leagues
+urls <- list(
+"https://www.football-data.co.uk/mmz4281/1718/all-euro-data-2017-2018.xlsx",
+"https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
+"https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
+"https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
+"https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
+"https://www.football-data.co.uk/mmz4281/2123/all-euro-data-2022-2023.xlsx"
+)
+All_leagues <- tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
+filename = urls)
+All_leagues <- All_leagues %>%
+mutate(data = map(filename, Read_excel_files)) %>%
+select(-filename)
+urls <- list(
+"https://www.football-data.co.uk/mmz4281/1718/all-euro-data-2017-2018.xlsx",
+"https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
+"https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
+"https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
+"https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
+"https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx"
+)
+All_leagues <- tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
+filename = urls)
+All_leagues <- All_leagues %>%
+mutate(data = map(filename, Read_excel_files)) %>%
+select(-filename)
+All_leagues
+liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1")
+liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1")
+All_leagues <- All_leagues %>%
+unnest(data) %>%
+filter(league %in% liigat)
+All_leagues
+new_leagues
+buch_data <- bind_rows(All_leagues, new_leagues)
+All_leagues
+new_leagues
+All_leagues %>% bind_rows(new_leagues)
+All_leagues %>% dplyr::bind_rows(new_leagues)
+all_data <- bind_rows(All_leagues, new_leagues)
+all_data <- dplyr::bind_rows(All_leagues, new_leagues)
+all_data
+all_data
+all_data %>% distinct(Home)
+all_data %>% distinct(Home) %>% mutate(across(starts_with('Home'), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+arrange(Home)
+buch_names <- all_data %>% distinct(Home) %>% mutate(across(starts_with('Home'), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+arrange(Home)
+all_data
+load_all()
+buch_dat <- get_historical_buchdata()
+document()
+load_all()
+df <- get_historical_buchdata()
+df
+df
+df <- df %>% mutate(date = as_date(date))
+df
+hist_buch <- df
+use_data(hist_buch)
+df %>% mutate(across(c(home, away), ~toupper(.)))
+df %>% mutate(across(c('home', 'away'), ~toupper(.)))
+df %>% mutate(across(c(Home), ~toupper(.)))
+?stringr::str_to_lower()
+?tolower()
+document()
+document()
+load_all()
+document()
+load_all()
+seasons <- seq(2018, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
+urls <- list(
+"https://www.football-data.co.uk/mmz4281/1718/all-euro-data-2017-2018.xlsx",
+"https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
+"https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
+"https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
+"https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
+"https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx"
+)
+hist_buch_data <- get_historical_buchdata(urls)
+use_data(hist_buch_data)
+use_data(fbref_data)
+hist_buch_data
+fbref_data
+fbref_data %>% group_by(league) %>% skimr::skim()
+fbref_data %>%
+select(league, season, h_xg)
+fbref_data %>%
+select(league, season, h_xg) %>%
+group_by(league) %>%
+skimr::skim()
+fbref_data %>%
+select(league, season, h_xg) %>%
+group_by(league, season) %>%
+skimr::skim()
+fbref_data
+seasons
+seasons[seasons != 2018]
+seasons[seasons > 2018]
+hist_buch_data
+hist_buch_data
+hist_buch_data %>% skimr::skim()
+hist_buch_data
+hist_buch_data %>% distinct(league)
+fbref_data
+fbref_data %>% group_by(league, season) %>% summarise(first_date = first(date),)
+fbref_data %>% group_by(league, season) %>% summarise(first_date = first(date))
+hist_buch_data %>% group_by(league, season) %>% summarise(first_date = first(date))
+hist_buch_data %>% group_by(league, season) %>% summarise(first_date = first(date)) %>% View()
+fbref_data %>% group_by(league, season) %>% summarise(first_date = first(date)) %>% View()
+start_dates <- fbref_data %>% group_by(league, season) %>% summarise(first_date = first(date))
+View(start_dates)
+hist_buch_data %>% group_by(league, season) %>% summarise(first_date = first(date)) %>% View()
+fbref_data
+fbref_data %>% distinct(home)
+fbref_data %>% distinct(home) %>% View()
+document()
+load_all()
+fbref_data %>% distinct(home)
+fbref_data %>% distinct(home) %>% View()
+buch_data %>% distinct(home) %>% View()
+hist_buch_data %>% distinct(home) %>% View()
+hist_buch_data %>% distinct(home)
+hist_buch_data %>% distinct(home) %>% str_remove_all(home, '.|,|')
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, '.|,|'))
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, '.'))
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, ','))
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, ',|'))
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, ',|')) %>% View()
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, ",|.")) %>% View()
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, ",|'")) %>% View()
+hist_buch_data %>% distinct(home) %>% mutate(home = str_remove_all(home, ",|'|-")) %>% View()
+document()
+seasons <- seq(2018, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
