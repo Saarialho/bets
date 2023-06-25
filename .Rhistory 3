@@ -1,0 +1,340 @@
+load_all()
+configs
+hist_buch_data
+document()
+seasons <- seq(2018, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
+load_all()
+document()
+load_all()
+seasons <- seq(2018, 2023, 1)
+fbref_data <- get_fbref_data(seasons)
+urls <- list(
+"https://www.football-data.co.uk/mmz4281/1718/all-euro-data-2017-2018.xlsx",
+"https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
+"https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
+"https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
+"https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
+"https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx"
+)
+hist_buch_data <- get_historical_buchdata(urls)
+use_data(hist_buch_data)
+use_data(hist_buch_data, overwrite = TRUE)
+use_data(fbref_data, overwrite = TRUE)
+fbref_data
+fbref_data %>% distinct(home)
+hist_buch_data
+document()
+load_all()
+hist_buch
+hist_buch_data
+hist_buch_data
+hist_buch_data
+hist_buch_data
+fbref_data
+hist_buch_data
+fbref_data
+hist_buch_data %>%
+distinct(home)
+fbref_data %>%
+distinct(home)
+hist_buch_data %>%
+distinct(home)
+fbref_data %>%
+distinct(home)
+fbref_data %>%
+distinct(home)
+fbref_data %>%
+distinct(home) %>%
+rename(fbref_home = home)
+fbref_data <- fbref_data %>%
+distinct(home) %>%
+rename(fbref_home = home)
+fbref_data
+hist_buch_data %>%
+distinct(home)
+fbref_data
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 1)
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 2)
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 3)
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 1)
+hist_buch_data %>%
+distinct(home)
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 1) %>% View()
+hist_buch_data %>%
+distinct(home) %>%
+left_join(fbref_data, by = c('home' = 'fbref_home'))
+hist_buch_data %>%
+distinct(home) %>%
+left_join(fbref_data, by = c('home' = 'fbref_home'))
+?fuzzyjoin::stringdist_left_join()
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 1)
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 1) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 1) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE)) %>%
+filter(correct == FALSE)
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 3) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 2) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 3) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 3) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+fuzzy_join
+View(fuzzy_join)
+fuzzy_join %>%
+filter(correct != TRUE)
+fuzzy_join %>%
+filter(correct != TRUE) %>% View()
+View(fuzzy_join)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 2) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+fuzzy_join %>%
+group_by(home) %>%
+count(correct)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+View()
+fuzzy_join
+fuzzy_join %>%
+group_by(home) %>%
+count(correct)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(any(correct == TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(!any(correct == TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>% View()
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(!any(correct == TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(!any(correct == TRUE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>% View()
+filter(!(any(correct == TRUE) %>% replace_na(TRUE)))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(any(correct == TRUE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(any(correct == FALSE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+filter(any(correct != TRUE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+ungroup() %>%
+filter(any(correct != TRUE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+ungroup() %>%
+filter(!any(correct == TRUE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+ungroup() %>%
+filter(any(correct == TRUE) %>% replace_na(TRUE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+ungroup() %>% View()
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE))
+fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 3) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 5) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 10) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+fuzzy_join
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+problem_names
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+fuzzy_join %>%
+filter(home %in% problem_names$home) %>%
+mutate(correct = if_else(home == fbref_home))
+fuzzy_join %>%
+filter(home %in% problem_names$home) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+fuzzy_join %>%
+filter(home %in% problem_names$home) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE)) %>%
+filter(correct == TRUE)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 5) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+problem_names
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 3) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 5) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+fuzzy_join <- hist_buch_data %>%
+distinct(home) %>%
+fuzzyjoin::stringdist_left_join(fbref_data, by = c('home' = 'fbref_home'), max_dist = 4) %>%
+mutate(correct = if_else(home == fbref_home, TRUE, FALSE))
+problem_names <- fuzzy_join %>%
+group_by(home) %>%
+count(correct) %>%
+mutate(any_correct = if_else(any(correct == TRUE), TRUE, FALSE)) %>%
+mutate(any_correct = replace_na(any_correct, FALSE)) %>%
+ungroup() %>%
+filter(any_correct == FALSE)
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+problem_names
+fuzzy_join %>%
+filter(home %in% problem_names$home)
+document()
