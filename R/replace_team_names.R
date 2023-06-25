@@ -11,6 +11,9 @@
 #' @export
 replace_team_names <- function(data, team1, team2, pattern, replacement){
 
+  # Add word boundaries to the pattern
+  pattern <- paste0("\\b", pattern, "\\b")
+
   names <-
     dplyr::tibble(pattern = pattern,
            replacement = replacement) %>%
