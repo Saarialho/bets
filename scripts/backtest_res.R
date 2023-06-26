@@ -19,17 +19,20 @@ rps_scores <- preds %>%
   arrange(rps)
 rps_scores
 
-
 game_ids <- preds %>%
-  select(date, home) %>%
-  distinct() %>%
+  group_by(date, home, away) %>%
+  count() %>%
+  ungroup() %>%
   mutate(game_id = row_number())
 
+problem_games <- game_ids %>%
+  filter(n > 500)
 
 oof_predictions <- preds %>%
   left_join(game_ids) %>%
+  filter(!(game_id %in% problem_games$game_id)) %>%
   mutate(across(c(wmkt:xi), ~round(., 5))) %>%
-  mutate(model_id = glue::glue('model_{xi}', '{wmkt}')) %>%
+  mutate(model_id = glue::glue('model_{xi}_{wmkt}_{wxg}')) %>%
   select(game_id, model_id, league, FHP:FAP, p1:p2) %>%
   pivot_longer(FHP:FAP, names_to = 'close', values_to = 'target') %>%
   mutate(pred = case_when(close == 'FHP' ~ p1,
@@ -43,6 +46,11 @@ oof_predictions <- preds %>%
   select(-close, -p1, -pd, -p2) %>%
   pivot_wider(names_from = model_id, values_from = pred) %>%
   select(-game_id)
+
+oof_predictions %>%
+  dplyr::group_by(game_id, league, target, side, model_id) %>%
+  dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
+  dplyr::filter(n > 1L)
 
 oof_predictions
 
