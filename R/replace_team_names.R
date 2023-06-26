@@ -12,12 +12,13 @@
 replace_team_names <- function(data, team1, team2, pattern, replacement){
 
   # Add word boundaries to the pattern
-  pattern <- paste0("\\b", pattern, "\\b")
+  pattern <- paste0("(?<! )\\b", pattern, "\\b(?! )")
 
   names <-
     dplyr::tibble(pattern = pattern,
            replacement = replacement) %>%
-    dplyr::filter(pattern != replacement)
+    dplyr::filter(pattern != replacement) %>%
+    dplyr::arrange(desc(nchar(pattern))) # Sort by length of pattern
 
   # Making the named replacement vector
   replacements <- c(names$replacement)

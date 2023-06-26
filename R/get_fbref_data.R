@@ -29,7 +29,11 @@ get_fbref_data <- function(seasons){
                   home = Home, away = Away, hg = HomeGoals, ag = AwayGoals, h_xg = Home_xG, a_xg = Away_xG) %>%
     mutate(across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
     mutate(across(c(home, away), ~tolower(.))) %>%
-    dplyr::mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]")))
+    dplyr::mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]"))) %>%
+    #santos seka MX etta Bras liigoissa
+    mutate(across(c(home, away), ~ if_else(league == 'Liga MX' & . == 'santos', 'santos laguna', .)))
 }
+
+
 
 

@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/Saarialho/bets
 BugReports: https://github.com/Saarialho/bets/issues
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
