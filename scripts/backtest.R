@@ -46,16 +46,14 @@ leagues %>%
 
 rm(data)
 
-weights <-
-  dials::grid_latin_hypercube(
-  wmkt(),
-  wxg(),
-  wgoals(),
-  xi(),
-  size = 500
-)
-
+weights <- t(replicate(1000, diff(c(0, sort(runif(2)), 1))) ) %>%
+  as_tibble() %>%
+  select(wmkt = V1, wxg = V2, wgoals = V3) %>%
+  rowwise() %>%
+  mutate(xi = runif(1, 0.00, 0.2)) %>%
+  ungroup()
 weights
+
 
 for (row in seq_len(nrow(leagues))){
 
