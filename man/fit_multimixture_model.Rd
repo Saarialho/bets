@@ -4,10 +4,12 @@
 \alias{fit_multimixture_model}
 \title{fit multimixture model}
 \usage{
-fit_multimixture_model(games)
+fit_multimixture_model(games, xi)
 }
 \arguments{
 \item{games}{games dataset}
+
+\item{xi}{time decay}
 }
 \description{
 fit multimixture model
