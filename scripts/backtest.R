@@ -71,6 +71,7 @@ for (row in seq_len(nrow(leagues))){
 
       resamples <- season_data %>%
         unnest(c(data)) %>%
+        arrange(date) %>%
         rsample::sliding_period(date,
                                 'day',
                                 lookback = Inf,

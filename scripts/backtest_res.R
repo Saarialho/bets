@@ -1,4 +1,5 @@
-
+library(tidymodels)
+library(glmnet)
 
 preds <- here::here('output') %>%
   fs::dir_ls() %>%
@@ -6,7 +7,6 @@ preds <- here::here('output') %>%
   unnest(c(data)) %>%
   arrange(date) %>%
   filter(!is.na(p1))
-
 preds
 
 rps_scores <- preds %>%
@@ -17,7 +17,6 @@ rps_scores <- preds %>%
   select(-data) %>%
   mutate(rps = map_dbl(rps, ~mean(., na.rm = TRUE))) %>%
   arrange(rps)
-
 rps_scores
 
 
@@ -47,9 +46,6 @@ oof_predictions <- preds %>%
 
 oof_predictions
 
-library(tidymodels)
-library(glmnet)
-
 model_spec <-
   linear_reg(penalty = tune::tune(), mixture = 1) %>%
   set_engine("glmnet", lower.limits = 0, lambda.min.ratio = 0)
@@ -73,21 +69,46 @@ tuned <- wf %>%
     resamples = rsample::bootstraps(oof_predictions, 50),
     grid = 50,
     metrics = metric_set(rsq_trad),
-    control = control_grid(save_pred = TRUE, save_workflow = TRUE)
+    control = control_grid(save_pred = FALSE, save_workflow = FALSE)
   )
 tuned
 
 best_param <- tune::select_best(tuned, metric = 'rsq_trad')
 
-lasso_coefs <-
-  wf %>%
+meta_model <- wf %>%
   finalize_workflow(select_best(tuned, metric = 'rsq_trad')) %>%
   parsnip::fit(data = oof_predictions) %>%
+  butcher::butcher()
+
+use_data(meta_model, overwrite = TRUE)
+
+lasso_coefs <- meta_model %>%
   extract_fit_parsnip() %>%
   tidy() %>%
   filter(estimate != 0)
 
 use_data(lasso_coefs, overwrite = TRUE)
+
+lasso_coefs
+
+selected_models <- lasso_coefs %>%
+  filter(term != '(Intercept)') %>%
+  pull(term)
+
+meta_model_preds <- oof_predictions %>%
+  bind_cols(predict(meta_model, .))
+
+meta_model_preds %>%
+  select(target, .pred) %>%
+  ggstatsplot::ggscatterstats(x = .pred, y = target)
+
+meta_model_preds %>%
+  select(where(is.numeric)) %>%
+  pivot_longer(-target) %>%
+  group_by(name) %>%
+  summarise(cor = cor(target, value)) %>%
+  arrange(desc(cor))
+
 
 
 
