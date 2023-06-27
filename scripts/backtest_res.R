@@ -26,7 +26,7 @@ game_ids <- preds %>%
   mutate(game_id = row_number())
 
 problem_games <- game_ids %>%
-  filter(n > 500)
+  filter(n > 1000)
 
 oof_predictions <- preds %>%
   left_join(game_ids) %>%
@@ -69,8 +69,8 @@ options(tidymodels.dark = TRUE)
 
 tuned <- wf %>%
   tune_grid(
-    resamples = rsample::bootstraps(oof_predictions, 50),
-    grid = 50,
+    resamples = rsample::bootstraps(oof_predictions, 80),
+    grid = 80,
     metrics = metric_set(rsq_trad),
     control = control_grid(save_pred = FALSE, save_workflow = FALSE)
   )
@@ -102,20 +102,41 @@ meta_model_preds <- oof_predictions %>%
   bind_cols(predict(meta_model, .))
 
 meta_model_preds %>%
-  select(target, .pred) %>%
-  ggstatsplot::ggscatterstats(x = .pred, y = target)
-
-meta_model_preds %>%
   select(where(is.numeric)) %>%
   pivot_longer(-target) %>%
   group_by(name) %>%
   summarise(cor = cor(target, value)) %>%
   arrange(desc(cor))
 
-preds
+meta_model_preds %>%
+  select(target, .pred) %>%
+  ggstatsplot::ggscatterstats(x = .pred, y = target)
 
 
+#nain saa manuaalisesti tehtya!
+intercept <- pull(filter(lasso_coefs, term == '(Intercept)'), estimate)
+side_x <- pull(filter(lasso_coefs, term == 'side_X'), estimate)
+
+meta_model_preds %>%
+  select(target, side, .pred, all_of(selected_models[-length(selected_models)])) %>%
+  pivot_longer(contains('model')) %>%
+  left_join(lasso_coefs %>% select(name = term, estimate)) %>%
+  group_by(target, side, .pred) %>%
+  summarise(man_pred = sum(value*estimate)+intercept) %>%
+  mutate(man_pred = if_else(side == 'X', man_pred + side_x, man_pred))
 
 
+meta_model_preds %>%
+  select(target, side, .pred, all_of(selected_models[-length(selected_models)])) %>%
+  skimr::skim()
+
+bets::lasso_coefs
+
+lasso_models <- preds %>%
+  distinct(wmkt, wxg, wgoals, xi) %>%
+  mutate(across(c(wmkt:xi), ~round(., 5))) %>%
+  mutate(model_id = glue::glue('model_{xi}_{wmkt}')) %>%
+  filter(model_id %in% bets::lasso_coefs$term)
+use_data(lasso_models)
 
 

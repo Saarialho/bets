@@ -1,3 +1,4 @@
+library(bets)
 data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
 
 data %>% skimr::skim()
@@ -17,8 +18,6 @@ problems <- data %>%
   arrange(desc(count_na)) %>%
   filter(count_na > 2)
 problems
-
-data
 
 #add fair probs
 data <- data %>%
@@ -50,13 +49,25 @@ weights <- t(replicate(1000, diff(c(0, sort(runif(2)), 1))) ) %>%
   as_tibble() %>%
   select(wmkt = V1, wxg = V2, wgoals = V3) %>%
   rowwise() %>%
-  mutate(xi = runif(1, 0.00, 0.2)) %>%
+  mutate(xi = runif(1, 0.00, 0.1)) %>%
   ungroup()
 weights
 
 
-for (row in seq_len(nrow(leagues))){
+library(foreach)
+library(doParallel)
+# Register parallel backend
+cl <- makeCluster(8)
+registerDoParallel(cl)
+clusterEvalQ(cl, {
+  library(tidyverse)
+  library(goalmodel)
+  library(bets)
+  library(rsample)
+})
 
+# Replace for loop with foreach loop
+foreach(row = seq_len(nrow(leagues))) %dopar% {
   tryCatch(
     {
 
@@ -112,12 +123,10 @@ for (row in seq_len(nrow(leagues))){
       qs::qsave(predictions, here::here('output', glue::glue('{league}_{season}.rds')))
 
     },
-  error=function(error_message) {message(error_message)}
+    error=function(error_message) {message(error_message)}
   )
-
 }
 
-
-
-
+# Stop the cluster
+stopCluster(cl)
 

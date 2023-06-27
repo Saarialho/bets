@@ -2,7 +2,7 @@
 #'
 #' @param liigat vector of league codes
 #' @export
-HaePinnaclenKertoimet <- function(liigat){
+get_pinnacle_odds <- function(liigat){
   soccer_id <- 29
   Fixtures <- pinnacle.API::GetFixtures(soccer_id, liigat, islive = FALSE) %>%
     dplyr::select(events.id=league.events.id, events.home=league.events.home, events.away=league.events.away)
@@ -17,7 +17,7 @@ HaePinnaclenKertoimet <- function(liigat){
            moneyline.away = leagues.events.periods.moneyline.away,
            periods.spreads = leagues.events.periods.spreads,
            maxbet = leagues.events.periods.maxMoneyline) %>%
-    dplyr::mutate(date = date(lubridate::ymd_hms(date)))
+    dplyr::mutate(date = as_date(lubridate::ymd_hms(date)))
 
   soccer_data <- Fixtures %>%
     dplyr::left_join(Odds, by = c("events.id")) %>%

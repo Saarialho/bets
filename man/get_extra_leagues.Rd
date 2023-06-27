@@ -4,7 +4,7 @@
 \alias{get_extra_leagues}
 \title{get extra leagues data from buchdal}
 \usage{
-get_extra_leagues(URL)
+get_extra_leagues(URL, liigat)
 }
 \arguments{
 \item{URL}{url code}
