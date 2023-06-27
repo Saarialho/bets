@@ -1,0 +1,24 @@
+load_all()
+load_all()
+league_specs <-
+tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
+league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'))
+pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
+rename(league.id = leagues.id) %>%
+group_by(league.id) %>%
+nest(pelit = c(-league.id)) %>%
+left_join(league_specs)
+log_in_pinnacle()
+league_specs <-
+tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
+league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'))
+pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
+rename(league.id = leagues.id) %>%
+group_by(league.id) %>%
+nest(pelit = c(-league.id)) %>%
+left_join(league_specs)
+coefs <- bets::lasso_coefs
+configs <- bets::lasso_models %>%
+left_join(bets::lasso_coefs, by = c('model_id' = 'term')) %>%
+arrange(desc(estimate))
+configs

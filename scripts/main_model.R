@@ -11,13 +11,12 @@ pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
   group_by(league.id) %>%
   nest(pelit = c(-league.id)) %>%
   left_join(league_specs)
-
+pinnacle_odds
 
 coefs <- bets::lasso_coefs
 configs <- bets::lasso_models %>%
-  left_join(bets::lasso_coefs, by = c('model_id' = 'term')) %>%
+  left_join(coefs, by = c('model_id' = 'term')) %>%
   arrange(desc(estimate))
-
 
 main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx',
                                        pinnacle_odds$league)
@@ -26,6 +25,15 @@ new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_
 buch_leagues <- bind_rows(main_leagues, new_leagues)
 
 buch_leagues
+
+active_leagues <- buch_leagues %>%
+  group_by(league) %>%
+  summarise(days_since_last = as.double(Sys.Date()-last(date))) %>%
+  filter(days_since_last < 20) %>%
+  pull(league)
+
+pinnacle_odds <- pinnacle_odds %>%
+  filter(league %in% active_leagues)
 
 fbref_countries <- c("ENG", "ESP", "ITA", "GER", "FRA", 'USA', 'NED', 'MEX', 'POR', 'BRA', 'ENG')
 latest_comps <- vroom::vroom('https://raw.githubusercontent.com/JaseZiv/worldfootballR_data/master/raw-data/all_leages_and_cups/all_competitions.csv') %>%
@@ -44,6 +52,14 @@ fbref_leagues %>%
 
 main_data <- join_buch_fbref(buch_data = buch_leagues, fbref_data = fbref_leagues) %>%
   select(-contains('date_'), -c(PSCH:FTR)) %>%
+  filter(league %in% active_leagues)
+
+main_data %>%
+  select(league, h_xg) %>%
+  group_by(league) %>%
+  skimr::skim()
+
+main_data <- main_data %>%
   mutate(h_xg = if_else(is.na(h_xg), mhxg, h_xg),
          a_xg = if_else(is.na(a_xg), maxg, a_xg))
 
@@ -66,35 +82,134 @@ fits <- pin_names %>%
          awxg = wmkt*maxg + wxg*a_xg + wgoals*FTAG) %>%
   group_nest(league, model_id, xi) %>%
   mutate(fit = map2(data, xi, fit_multimixture_model)) %>%
-  select(league, model_id, fit)
+  select(league, model_id, fit) %>%
+  mutate(teams = map(fit, ~.x %>% pluck('all_teams')))
 fits
 
 suppressWarnings(
-  predictions <- fits %>%
+  preds <- fits %>%
     left_join(pinnacle_odds) %>%
     mutate(pelit = map2(fit, pelit, possibly(predict_1x2, otherwise = NA))) %>%
-    select(model_id, pelit) %>%
+    select(league, model_id, pelit, teams) %>%
     unnest(pelit)
 )
 
+team_names_map <- preds %>%
+  filter(is.na(p1)) %>%
+  select(league, team1, team2, teams) %>%
+  distinct() %>%
+  group_nest(league, teams) %>%
+  mutate(pin_home = map(data, ~ .x %>% pull(team1)),
+         pin_away = map(data, ~ .x %>% pull(team2)),
+         pin_teams = map2(pin_home, pin_away, ~c(.x, .y))) %>%
+  select(league, teams, pin_teams) %>%
+  unnest(c(teams)) %>%
+  unnest(c(pin_teams)) %>%
+  mutate(correct = if_else(pin_teams %in% teams, TRUE, FALSE)) %>%
+  filter(correct == FALSE) %>%
+  select(-correct) %>%
+  group_nest(league, pin_teams) %>%
+  arrange(league, pin_teams) %>%
+  group_by(league) %>%
+  mutate(closest_match = map_chr(pin_teams, function(x) {
+    teams <- data[[1]]$teams
+    distances <- adist(x, teams)
+    teams[which.min(distances)]
+  })) %>%
+  ungroup() %>%
+  select(league, closest_match, pin_teams) %>%
+  distinct(league, closest_match, .keep_all = TRUE)
+team_names_map
+
 #jatka tasta!
-predictions %>%
-  select(-periods.spreads) %>%
+
+intercept <- pull(filter(lasso_coefs, term == '(Intercept)'), estimate)
+side_x <- pull(filter(lasso_coefs, term == 'side_X'), estimate)
+
+multi_predictions <- preds %>%
+  select(-periods.spreads, -teams) %>%
   pivot_longer(cols = p1:p2, names_to = 'side', values_to = 'pred') %>%
-  pivot_wider(names_from = model_id, values_from = pred) %>%
-  mutate(side = factor(if_else(side == 'p1', '1', if_else(side == 'pd', 'X', '2')))) %>%
+  left_join(lasso_coefs %>% select(model_id  = term, estimate), by = 'model_id') %>%
+  group_by(date, league, team1, team2, mlh, mld, mla, maxbet, side) %>%
+  summarise(pred = sum(pred*estimate)+intercept, .groups = 'keep') %>%
+  mutate(pred = if_else(side == 'pd', pred + side_x, pred)) %>%
+  pivot_wider(names_from = side, values_from = pred) %>%
+  ungroup()
 
-  select(league:side, .pred) %>%
-  mutate(side = if_else(side == '1', 'p1', if_else(side == 'X', 'pd', 'p2'))) %>%
-  pivot_wider(names_from = side, values_from = .pred) %>%
-  filter(!is.na(league.id))
+spreads <- preds %>%
+  ungroup() %>%
+  distinct(league, .keep_all = TRUE) %>%
+  unnest(periods.spreads) %>%
+  filter(hdp %in% c(0,0.5,-0.5)) %>%
+  select(date, team1, team2, hdp, home, away)
 
+arviot <- multi_predictions %>%
+  left_join(spreads, by = join_by(date, team1, team2)) %>%
+  mutate(EV1 = p1*mlh-1,
+         EVD = pd*mld-1,
+         EV2 = p2*mla-1) %>%
+  mutate(EV1_hdp = case_when(hdp == 0 ~ p1/(1-pd)*home-1,
+                             hdp == -0.5 ~ p1*home-1,
+                             hdp == 0.5 ~ (p1+pd)*home-1),
+         EV2_hdp = case_when(hdp == 0 ~ p2/(1-pd)*away-1,
+                             hdp == -0.5 ~ (p2+pd)*away-1,
+                             hdp == 0.5 ~ p2*away-1)) %>%
+  group_by(team1,date) %>%
+  mutate(max_hdp = pmax(EV1_hdp, EV2_hdp)) %>%
+  filter((max_hdp == max(max_hdp)) %>% replace_na(TRUE)) %>%
+  mutate(EV = pmax(EV1,EVD,EV2,EV1_hdp,EV2_hdp, na.rm = TRUE),
+         kerroin = case_when(EV == EV1 ~ mlh,
+                             EV == EVD ~ mld,
+                             EV == EV2 ~ mla,
+                             EV == EV1_hdp ~ home,
+                             EV == EV2_hdp ~ away),
+         kohde = factor(case_when(EV == EV1 | EV == EV1_hdp ~ 1,
+                                  EV == EVD ~ 2,
+                                  TRUE ~ 3)),
+         dts = as.numeric(date-Sys.Date()),
+         id = paste(date, team1, team2, sep = "-")) %>%
+  ungroup %>%
+  mutate_if(is.numeric, round, 3)
+arviot
 
+#tama myohemmin!
+# if(arviot %>% filter(is.na(p1)) %>% nrow > 0){
+#   message('ongelmia nimissä')
+#   arviot <- arviot %>%
+#     filter(!is.na(p1)) %>%
+#     modelr::add_predictions(., qs::qread(file.path(data_path, 'clv_stack.rds')), var = 'pred') %>%
+#     unnest(pred)
+# } else {
+#   arviot <- arviot %>%
+#     modelr::add_predictions(., qs::qread(file.path(data_path, 'clv_stack.rds')), var = 'pred') %>%
+#     unnest(pred)
+# }
 
+betit <- arviot %>%
+  filter(EV > 0.05, dts >= 2) %>%
+  filter(!(id %in% bets::hist_bets$id)) %>%
+  mutate(bet = pmap_dbl(list(EV, kerroin, maxbet), bets::kelly_bet)) %>%
+  mutate(across(where(is.numeric), ~ round(., 3)))
 
+if(nrow(betit) > 0){
+  betit %>%
+    arrange(desc(league)) %>%
+    select(date:p2, EV1:EV2_hdp, hdp, kerroin, bet) %>% View
+}
 
+hist_bets <- bets::hist_bets %>%
+  bind_rows(betit %>%
+              #laita # merkki eteen jos extra liiga data tullut
+              #filter(!str_detect(league, 'Liga|MLS|Serie')) %>%
+              mutate(kohde = as.numeric(kohde)))
+use_data(hist_bets, overwrite = TRUE)
 
-
-
+hist_arviot <- bets::hist_arviot %>%
+  bind_rows(arviot %>%
+              filter(!(id %in% hist_arviot$id), dts > 1) %>%
+              #laita # merkki eteen jos extra liiga data tullut
+              #filter(!str_detect(league, 'Liga|MLS|Serie')) %>%
+              mutate(kohde = as.numeric(kohde)))
+use_data(hist_arviot, overwrite = TRUE)
 
 

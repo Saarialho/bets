@@ -1,0 +1,512 @@
+"barnsley",               "barnsley",               "Barnsley",
+"bayern munich",          "bayern munich",          "Bayern Munich",
+"benevento",              "benevento",              "Benevento",
+"benfica",                "benfica",                "Benfica",
+"betis",                  "betis",                  "Betis",
+"birmingham city",             "birmingham",             "Birmingham",
+"blackburn",              "blackburn",              "Blackburn",
+"blackpool",              "blackpool",              "Blackpool",
+"boavista",               "boavista",               "Boavista",
+"bochum",                 "bochum",                 "Bochum",
+"bologna",                "bologna",                "Bologna",
+"bolton",                 "bolton",                 "Bolton",
+"bordeaux",               "bordeaux",               "Bordeaux",
+"botafogo rj",            "botafogo rj",            "Botafogo Rj",
+"bournemouth",            "bournemouth",            "Bournemouth",
+"braga",               "sp braga",               "Sp Braga",
+"bragantino",             "bragantino",             "Bragantino",
+"brentford",              "brentford",              "Brentford",
+"brescia",                "brescia",                "Brescia",
+"brest",                  "brest",                  "Brest",
+"brighton",               "brighton",               "Brighton",
+"bristol city",           "bristol city",           "Bristol City",
+"bsad",                   "bsad",                   "Bsad",
+"burnley",                "burnley",                "Burnley",
+"cadiz",                  "cadiz",                  "Cadiz",
+"caen",                   "caen",                   "Caen",
+"cagliari",               "cagliari",               "Cagliari",
+"cambuur",                "cambuur",                "Cambuur",
+"cardiff city",                "cardiff",                "Cardiff",
+"casa pia",               "casa pia",               "Casa Pia",
+"ceara",                  "ceara",                  "Ceara",
+"celta vigo",                  "celta",                  "Celta",
+"cf montreal",            "cf montreal",            "Cf Montreal",
+"chapecoense",          "chapecoensesc",          "Chapecoensesc",
+"charlotte",              "charlotte",              "Charlotte",
+"charlton ath",               "charlton",               "Charlton",
+"chaves",                 "chaves",                 "Chaves",
+"chelsea",                "chelsea",                "Chelsea",
+"chicago fire",           "chicago fire",           "Chicago Fire",
+"chievo",                 "chievo",                 "Chievo",
+"clermont foot",               "clermont",               "Clermont",
+"colorado rapids",        "colorado rapids",        "Colorado Rapids",
+"columbus crew",          "columbus crew",          "Columbus Crew",
+"corinthians",            "corinthians",            "Corinthians",
+"coritiba",               "coritiba",               "Coritiba",
+"coventry city",               "coventry",               "Coventry",
+"cremonese",              "cremonese",              "Cremonese",
+"crotone",                "crotone",                "Crotone",
+"cruz azul",              "cruz azul",              "Cruz Azul",
+"cruzeiro",               "cruzeiro",               "Cruzeiro",
+"crystal palace",         "crystal palace",         "Crystal Palace",
+"csa",                    "csa",                    "Csa",
+"cuiaba",                 "cuiaba",                 "Cuiaba",
+"dc united",              "dc united",              "Dc United",
+"de graafschap",          "de graafschap",          "De Graafschap",
+"den bosch",              "den bosch",              "Den Bosch",
+"derby county",                  "derby",                  "Derby",
+"dijon",                  "dijon",                  "Dijon",
+"dortmund",               "dortmund",               "Dortmund",
+"dusseldorf",     "fortuna dusseldorf",     "Fortuna Dusseldorf",
+"dynamo",                 "dynamo",                 "Dynamo",
+"dynamo fc",         "houston dynamo",         "Houston Dynamo",
+"eibar",                  "eibar",                  "Eibar",
+"eint frankfurt",          "ein frankfurt",          "Ein Frankfurt",
+"elche",                  "elche",                  "Elche",
+"emmen",               "fc emmen",               "Fc Emmen",
+"empoli",                 "empoli",                 "Empoli",
+"espanyol",                "espanol",                "Espanol",
+"estoril",                "estoril",                "Estoril",
+"estrela",                "estrela",                "Estrela",
+"everton",                "everton",                "Everton",
+"excelsior",              "excelsior",              "Excelsior",
+"famalicao",              "famalicao",              "Famalicao",
+"farense",                "farense",                "Farense",
+"fc cincinnati",          "fc cincinnati",          "Fc Cincinnati",
+"fc dallas",              "fc dallas",              "Fc Dallas",
+"fc eindhoven",          "psv eindhoven",          "Psv Eindhoven",
+"fc juarez",                 "juarez",                 "Juarez",
+"feirense",               "feirense",               "Feirense",
+"feyenoord",              "feyenoord",              "Feyenoord",
+"fiorentina",             "fiorentina",             "Fiorentina",
+"flamengo",            "flamengo rj",            "Flamengo Rj",
+"fluminense",             "fluminense",             "Fluminense",
+"fortaleza",              "fortaleza",              "Fortaleza",
+"fortuna sittard",            "for sittard",            "For Sittard",
+"freiburg",               "freiburg",               "Freiburg",
+"frosinone",              "frosinone",              "Frosinone",
+"fulham",                 "fulham",                 "Fulham",
+"genoa",                  "genoa",                  "Genoa",
+"getafe",                 "getafe",                 "Getafe",
+"gil vicente fc",            "gil vicente",            "Gil Vicente",
+"girona",                 "girona",                 "Girona",
+"go ahead eag",        "go ahead eagles",        "Go Ahead Eagles",
+"goias",                  "goias",                  "Goias",
+"granada",                "granada",                "Granada",
+"gremio",                 "gremio",                 "Gremio",
+"greuther furth",         "greuther furth",         "Greuther Furth",
+"groningen",              "groningen",              "Groningen",
+"guadalajara",     "guadalajara chivas",     "Guadalajara Chivas",
+"guingamp",               "guingamp",               "Guingamp",
+"hamburger sv",                "hamburg",                "Hamburg",
+"hannover 96",               "hannover",               "Hannover",
+"heerenveen",             "heerenveen",             "Heerenveen",
+"heidenheim",             "heidenheim",             "Heidenheim",
+"hellas verona",                 "verona",                 "Verona",
+"heracles almelo",               "heracles",               "Heracles",
+"hertha bsc",                 "hertha",                 "Hertha",
+"hoffenheim",             "hoffenheim",             "Hoffenheim",
+"holstein kiel",          "holstein kiel",          "Holstein Kiel",
+"huddersfield",           "huddersfield",           "Huddersfield",
+"huesca",                 "huesca",                 "Huesca",
+"hull city",                   "hull",                   "Hull",
+"inter",                  "inter",                  "Inter",
+"inter miami",            "inter miami",            "Inter Miami",
+"internacional",          "internacional",          "Internacional",
+"ipswich town",                "ipswich",                "Ipswich",
+"juventude",              "juventude",              "Juventude",
+"juventus",               "juventus",               "Juventus",
+"koln",                "fc koln",                "Fc Koln",
+"la coruna",              "la coruna",              "La Coruna",
+"la galaxy",     "los angeles galaxy",     "Los Angeles Galaxy",
+"las palmas",             "las palmas",             "Las Palmas",
+"lazio",                  "lazio",                  "Lazio",
+"lecce",                  "lecce",                  "Lecce",
+"leeds united",                  "leeds",                  "Leeds",
+"leganes",                "leganes",                "Leganes",
+"leicester city",              "leicester",              "Leicester",
+"lens",                   "lens",                   "Lens",
+"leon",                   "lyon",                   "Lyon",
+"levante",                "levante",                "Levante",
+"leverkusen",             "leverkusen",             "Leverkusen",
+"lille",                  "lille",                  "Lille",
+"liverpool",              "liverpool",              "Liverpool",
+"lobos buap",             "lobos buap",             "Lobos Buap",
+"lorient",                "lorient",                "Lorient",
+"los angeles fc",         "los angeles fc",         "Los Angeles Fc",
+"luton town",                  "Luton",                  "Luton",
+"lyon",                   "lyon",                   "Lyon",
+"mainz 05",                  "mainz",                  "Mainz",
+"malaga",                 "malaga",                 "Malaga",
+"mallorca",               "mallorca",               "Mallorca",
+"manchester city",               "man city",               "Man City",
+"manchester utd",             "man united",             "Man United",
+"maritimo",               "maritimo",               "Maritimo",
+"marseille",              "marseille",              "Marseille",
+"mazatlan",            "mazatlan fc",            "Mazatlan Fc",
+"metz",                   "metz",                   "Metz",
+"mgladbach",              "mgladbach",              "Mgladbach",
+"middlesbrough",          "middlesbrough",          "Middlesbrough",
+"milan",                  "milan",                  "Milan",
+"millwall",               "millwall",               "Millwall",
+"minnesota utd",       "minnesota united",       "Minnesota United",
+"monaco",                 "monaco",                 "Monaco",
+"monterrey",              "monterrey",              "Monterrey",
+"montpellier",            "montpellier",            "Montpellier",
+"montreal impact",            "cf montreal",            "Cf Montreal",
+"monza",                  "monza",                  "Monza",
+"moreirense",             "moreirense",             "Moreirense",
+"morelia",                "morelia",                "Morelia",
+"mvv maastricht",             "maastricht",             "Maastricht",
+"nac breda",              "nac breda",              "Nac Breda",
+"nacional",               "nacional",               "Nacional",
+"nantes",                 "nantes",                 "Nantes",
+"napoli",                 "napoli",                 "Napoli",
+"nashville",           "nashville sc",           "Nashville Sc",
+"nec nijmegen",               "nijmegen",               "Nijmegen",
+"necaxa",                 "necaxa",                 "Necaxa",
+"new england", "new england revolution", "New England Revolution",
+"newcastle utd",              "newcastle",              "Newcastle",
+"nice",                   "nice",                   "Nice",
+"nimes",                  "nimes",                  "Nimes",
+"norwich city",                "norwich",                "Norwich",
+"nottham forest",           "nottm forest",           "Nottm Forest",
+"nurnberg",               "nurnberg",               "Nurnberg",
+"ny red bulls",     "new york red bulls",     "New York Red Bulls",
+"nycfc",          "new york city",          "New York City",
+"orlando city",           "orlando city",           "Orlando City",
+"osasuna",                "osasuna",                "Osasuna",
+"pachuca",                "pachuca",                "Pachuca",
+"pacos",         "pacos ferreira",         "Pacos Ferreira",
+"paderborn 07",              "paderborn",              "Paderborn",
+"palmeiras",              "palmeiras",              "Palmeiras",
+"paris sg",               "paris sg",               "Paris Sg",
+"parma",                  "parma",                  "Parma",
+"pborough utd",              "peterboro",              "Peterboro",
+"philadelphia",     "philadelphia union",     "Philadelphia Union",
+"portimonense",           "portimonense",           "Portimonense",
+"portland timbers",       "portland timbers",       "Portland Timbers",
+"porto",                  "porto",                  "Porto",
+"preston",                "preston",                "Preston",
+"psv eindhoven",          "psv eindhoven",          "Psv Eindhoven",
+"puebla",                 "puebla",                 "Puebla",
+"qpr",                    "qpr",                    "Qpr",
+"queretaro",              "queretaro",              "Queretaro",
+"rayo vallecano",              "vallecano",              "Vallecano",
+"rb leipzig",             "rb leipzig",             "Rb Leipzig",
+"reading",                "reading",                "Reading",
+"real madrid",            "real madrid",            "Real Madrid",
+"real salt lake",         "real salt lake",         "Real Salt Lake",
+"real sociedad",               "sociedad",               "Sociedad",
+"reims",                  "reims",                  "Reims",
+"rennes",                 "rennes",                 "Rennes",
+"rio ave",                "rio ave",                "Rio Ave",
+"rkc waalwijk",               "waalwijk",               "Waalwijk",
+"roma",                   "roma",                   "Roma",
+"roma",                   "roda",                   "Roda",
+"rotherham utd",              "rotherham",              "Rotherham",
+"saintetienne",             "st etienne",             "St Etienne",
+"salernitana",            "salernitana",            "Salernitana",
+"sampdoria",              "sampdoria",              "Sampdoria",
+"san jose",   "san jose earthquakes",   "San Jose Earthquakes",
+"santa clara",            "santa clara",            "Santa Clara",
+"santos",                 "santos",                 "Santos",
+"sao paulo",              "sao paulo",              "Sao Paulo",
+"sassuolo",               "sassuolo",               "Sassuolo",
+"schalke 04",             "schalke 04",             "Schalke 04",
+"seattle",       "seattle sounders",       "Seattle Sounders",
+"sevilla",                "sevilla",                "Sevilla",
+"sheffield utd",       "sheffield united",       "Sheffield United",
+"sheffield weds",         "sheffield weds",         "Sheffield Weds",
+"southampton",            "southampton",            "Southampton",
+"spal",                   "spal",                   "Spal",
+"sparta rdam",       "sparta rotterdam",       "Sparta Rotterdam",
+"spezia",                 "spezia",                 "Spezia",
+"sport recife",           "sport recife",           "Sport Recife",
+"sporting cp",              "sp lisbon",              "Sp Lisbon",
+"sporting kc",   "sporting kansas city",   "Sporting Kansas City",
+"st louis",          "st louis city",          "St Louis City",
+"stoke city",                  "stoke",                  "Stoke",
+"strasbourg",             "strasbourg",             "Strasbourg",
+"stuttgart",              "stuttgart",              "Stuttgart",
+"sunderland",             "sunderland",             "Sunderland",
+"swansea city",                "swansea",                "Swansea",
+"tijuana",           "club tijuana",           "Club Tijuana",
+"toluca",                 "toluca",                 "Toluca",
+"tondela",                "tondela",                "Tondela",
+"torino",                 "torino",                 "Torino",
+"toronto fc",             "toronto fc",             "Toronto Fc",
+"tottenham",              "tottenham",              "Tottenham",
+"toulouse",               "toulouse",               "Toulouse",
+"troyes",                 "troyes",                 "Troyes",
+"twente",                 "twente",                 "Twente",
+"uanl",            "uanl tigres",            "Uanl Tigres",
+"udinese",                "udinese",                "Udinese",
+"unam",             "unam pumas",             "Unam Pumas",
+"union berlin",           "union berlin",           "Union Berlin",
+"utrecht",                "utrecht",                "Utrecht",
+"valencia",               "valencia",               "Valencia",
+"valladolid",             "valladolid",             "Valladolid",
+"vancouver",    "vancouver whitecaps",    "Vancouver Whitecaps",
+"vasco da gama",                  "vasco",                  "Vasco",
+"venezia",                "venezia",                "Venezia",
+"veracruz",               "veracruz",               "Veracruz",
+"villarreal",             "villarreal",             "Villarreal",
+"vitesse",                "vitesse",                "Vitesse",
+"vitoria",                "setubal",                "Setubal",
+"vitoria setubal",                "setubal",                "Setubal",
+"vizela",                 "vizela",                 "Vizela",
+"volendam",               "volendam",               "Volendam",
+"vvvvenlo",              "vvv venlo",              "Vvv Venlo",
+"watford",                "watford",                "Watford",
+"werder bremen",          "werder bremen",          "Werder Bremen",
+"west brom",              "west brom",              "West Brom",
+"west ham",               "west ham",               "West Ham",
+"wigan athletic",                  "wigan",                  "Wigan",
+"willem ii",              "willem ii",              "Willem Ii",
+"wolfsburg",              "wolfsburg",              "Wolfsburg",
+"wolves",                 "wolves",                 "Wolves",
+"wycombe",                "wycombe",                "Wycombe",
+"zwolle",                 "zwolle",                 "Zwolle"
+)
+use_r('team_lookup')
+datapasta::dpasta(team_look_up)
+document()
+document()
+pattern <- team_look_up$fbref_name
+replacement <- team_look_up$buch_name
+pattern
+pattern[pattern != replacement]
+pattern[pattern != replacement]
+replacement[replacement != pattern]
+setdiff(pattern, replacement)
+setdiff(pattern, replacement)
+setdiff(replacement, pattern)
+pattern <- setdiff(pattern, replacement)
+replacement <- setdiff(replacement, pattern)
+team_look_up$fbref_name
+bind_cols(pattern, replacement)
+pattern <- team_look_up$fbref_name
+replacement <- team_look_up$buch_name
+bind_cols(pattern, replacement)
+names <-
+tibble(pattern = pattern,
+replacement = replacement) %>%
+filter(pattern != replacement)
+names
+# Making the named replacement vector
+replacements <- c(names$replacement)
+names(replacements) <- c(names$pattern)
+replacements
+document()
+document()
+document()
+document()
+hist_buch_data
+team_dictionary()
+team_dictionary()$buch_name
+hist_buch_data %>% replace_team_names(home, away, team_dictionary()$buch_name, team_dictionary()$fbref_name)
+use_r('join_fbref_buch')
+hist_buch_data
+fbref_data
+devtools::load_all()
+load_all()
+hist_buch_data
+bets::fbref_data
+bets::hist_buch_data
+data.table::setDT(buch_data)
+buch_data <- bets::hist_buch_data
+fbref_data <- bets::fbref_data
+data.table::setDT(buch_data)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+fbref_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+result <- buch_data[data538, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0]
+buch_data
+fbref_data
+fbref_data %>%
+replace_team_names(home, away, team_dictionary()$fbref_name, team_dictionary()$buch_name)
+fbref_data <- bets::fbref_data
+fbref_data <- fbref_data %>%
+replace_team_names(home, away, team_dictionary()$fbref_name, team_dictionary()$buch_name)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+fbref_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+result <- buch_data[data538, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0]
+result <- buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0]
+result
+fbref_data
+buch_data <- bets::hist_buch_data
+fbref_data <- bets::fbref_data
+fbref_data <- fbref_data %>%
+replace_team_names(home, away, team_dictionary()$fbref_name, team_dictionary()$buch_name) %>%
+select(date:a_xg)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+fbref_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0]
+buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0] %>%
+as_tibble()
+buch_data <- bets::hist_buch_data
+fbref_data <- bets::fbref_data
+fbref_data <- fbref_data %>%
+replace_team_names(home, away, team_dictionary()$fbref_name, team_dictionary()$buch_name) %>%
+select(date:a_xg)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+fbref_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0] %>%
+as_tibble() %>%
+select(-contains('date_'))
+buch_data <- bets::hist_buch_data
+fbref_data <- bets::fbref_data
+fbref_data <- fbref_data %>%
+replace_team_names(home, away, team_dictionary()$fbref_name, team_dictionary()$buch_name) %>%
+select(date:a_xg) %>%
+select(-hg, -ag)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+fbref_data[, `:=`(date_start = date - 1, date_end = date + 1)]
+buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0] %>%
+as_tibble() %>%
+select(-contains('date_'))
+buch_data
+buch_data <- bets::hist_buch_data
+fbref_data <- bets::fbref_data
+fbref_data <- fbref_data %>%
+replace_team_names(home, away, team_dictionary()$fbref_name, team_dictionary()$buch_name) %>%
+select(date:a_xg) %>%
+select(-hg, -ag)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 2, date_end = date + 2)]
+fbref_data[, `:=`(date_start = date - 2, date_end = date + 2)]
+buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = 0] %>%
+as_tibble() %>%
+select(-contains('date_'))
+buch_data[fbref_data, on = .(home = home, away = away, date_start <= date, date_end >= date), nomatch = NA] %>%
+as_tibble() %>%
+select(-contains('date_'))
+document()
+document()
+load_all()
+join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+join_buch_fbref(bets::hist_buch_data, bets::fbref_data) %>%
+skimr::skim()
+bets::hist_buch_data
+bets::hist_buch_data %>% skimr::skim()
+load_all()
+join_buch_fbref(bets::hist_buch_data, bets::fbref_data) %>%
+skimr::skim()
+load_all()
+join_buch_fbref(bets::hist_buch_data, bets::fbref_data) %>%
+skimr::skim()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+data
+devtools::load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+data %>% skimr::skim()
+devtools::load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+bets::fbref_data
+buch_data <- bets::hist_buch_data
+fbref_data <- bets::fbref_data
+fbref_data <- fbref_data %>%
+bets::replace_team_names(home, away, bets::team_dictionary()$fbref_name, bets::team_dictionary()$buch_name) %>%
+select(date:a_xg) %>%
+select(-hg, -ag)
+data.table::setDT(buch_data)
+data.table::setDT(fbref_data)
+buch_data[, `:=`(date_start = date - 5, date_end = date + 5)]
+fbref_data[, `:=`(date_start = date - 5, date_end = date + 5)]
+# Get the names of the columns used in the join
+join_cols <- c("home", "away", "date_start", "date_end")
+# Get the names of the columns from fbref_data that are not used in the join
+fbref_cols <- setdiff(names(fbref_data), join_cols)
+buch_data
+fbref_data
+names(buch_data)
+fbref_cols
+c(names(buch_data),fbref_cols)
+load()
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+data
+data %>% skimr::skim()
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+data %>% skimr::skim()
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+data %>% skimr::skim()
+data
+data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg)))
+data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg))) %>%
+arrange(desc(count_na))
+fbref_data
+fbref_data %>% distinct(home)
+fbref_data %>% distinct(home) %>% View()
+fbref_data
+bets::fbref_data
+bets::fbref_data %>% distinct(home)
+bets::fbref_data %>% distinct(home) %>% View()
+problems <- data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg))) %>%
+arrange(desc(count_na))
+View(problems)
+fbref_names <- bets::fbref_data %>% distinct(home)
+View(fbref_names)
+buch_data %>% distinct(home)
+buch_names <- buch_data %>% distinct(home)
+View(buch_names)
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+data %>% skimr::skim()
+problems <- data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg))) %>%
+arrange(desc(count_na))
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+problems <- data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg))) %>%
+arrange(desc(count_na))
+load_all()
+data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
+problems <- data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg))) %>%
+arrange(desc(count_na))
+problems <- data %>%
+group_by(home) %>%
+summarise(count_na = sum(is.na(h_xg))) %>%
+arrange(desc(count_na)) %>%
+filter(count_na > 5)
+data %>% skimr::skim()
+?stringr::str_replace_all()
+fbref_data %>% distinct(home)
+fbref_data %>% distinct(home) %>% pull
+paste0("\\b", fbref_data %>% distinct(home) %>% pull, "\\b")
+paste0("\\b", bets::fbref_data %>% distinct(home) %>% pull, "\\b")
+document()

@@ -12,7 +12,7 @@ kelly_bet <- function(ev, kerroin, max_limit){
       pinnacle.API::GetClientBalance()$outstandingTransactions
     )
 
-  b = ((ev-1)/(kerroin-1))
+  b = ((ev)/(kerroin-1))
   panos = b*Tilinrahat
   max_bet = min(0.02*Tilinrahat, 400)
 
