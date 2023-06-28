@@ -9,9 +9,9 @@ save_bets <- function(to_save, arviot = TRUE){
     hist_arviot <- bets::hist_arviot
 
     hist_arviot <- hist_arviot %>%
-      bind_rows(to_save %>%
-                  filter(!(id %in% hist_arviot$id), dts > 1) %>%
-                  mutate(kohde = as.numeric(kohde)))
+      dplyr::bind_rows(to_save %>%
+                         dplyr::filter(!(id %in% hist_arviot$id), dts > 1) %>%
+                         dplyr::mutate(kohde = as.numeric(kohde)))
 
     use_data(hist_arviot, overwrite = TRUE)
 
@@ -20,9 +20,9 @@ save_bets <- function(to_save, arviot = TRUE){
     hist_bets <- bets::hist_bets
 
     hist_bets <- hist_bets %>%
-      bind_rows(to_save %>%
-                  filter(!(id %in% hist_bets$id), dts > 1) %>%
-                  mutate(kohde = as.numeric(kohde)))
+      dplyr::bind_rows(to_save %>%
+                  dplyr::filter(!(id %in% hist_bets$id), dts > 1) %>%
+                  dplyr::mutate(kohde = as.numeric(kohde)))
 
     use_data(hist_bets, overwrite = TRUE)
 
