@@ -26,7 +26,7 @@ replace_team_names <- function(data, team1, team2, pattern, replacement){
 
   data %>%
     dplyr::group_by(league) %>%
-    dplyr::mutate(across(c({{team1}},{{team2}}), ~stringr::str_replace_all(., pattern = replacements))) %>%
+    dplyr::mutate(dplyr::across(c({{team1}},{{team2}}), ~stringr::str_replace_all(., pattern = replacements))) %>%
     dplyr::ungroup()
 }
 

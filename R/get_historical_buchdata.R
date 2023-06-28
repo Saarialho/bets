@@ -8,16 +8,16 @@ Read_excel_files <- function(URL){
   download.file(URL, destfile=temp, mode='wb')
 
   Mainleagues <- temp %>%
-    excel_sheets() %>%
-    set_names() %>%
-    map(read_excel, path = temp)
+    readxl::excel_sheets() %>%
+    purrr::set_names() %>%
+    purrr::map(readxl::read_excel, path = temp)
 
   Mainleagues <- Mainleagues %>%
-    keep(~has_element(names(.),"PSCH")) %>%
-    keep(~has_element(names(.),"PSH"))
+    purrr::keep(~purrr::has_element(names(.),"PSCH")) %>%
+    purrr::keep(~purrr::has_element(names(.),"PSH"))
 
-  Mainleagues <- map(Mainleagues, select, league = Div, date = Date, home = HomeTeam, away = AwayTeam, PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
-    bind_rows() %>%
+  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = Div, date = Date, home = HomeTeam, away = AwayTeam, PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
+    dplyr::bind_rows() %>%
     na.omit()
 
 }
@@ -30,18 +30,18 @@ Read_new_leagues <- function(URL){
   download.file(URL, destfile=temp, mode='wb')
 
   Mainleagues <- temp %>%
-    excel_sheets() %>%
-    set_names() %>%
-    map(read_excel, path = temp)
+    readxl::excel_sheets() %>%
+    purrr::set_names() %>%
+    purrr::map(readxl::read_excel, path = temp)
 
   Mainleagues <- Mainleagues %>%
-    keep(~has_element(names(.),"PH")) %>%
-    keep(names(.) %in% c("USA","MEX",'BRA')) %>%
-    map(~mutate(., Season = as.character(Season))) %>%
-    map(~mutate(., Season = substr(Season, 1, 4)))
+    purrr::keep(~purrr::has_element(names(.),"PH")) %>%
+    purrr::keep(names(.) %in% c("USA","MEX",'BRA')) %>%
+    purrr::map(~dplyr::mutate(., Season = as.character(Season))) %>%
+    purrr::map(~dplyr::mutate(., Season = substr(Season, 1, 4)))
 
-  Mainleagues <- map(Mainleagues, select, league = League, date = Date, season = Season, home = Home, away = Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
-    bind_rows() %>%
+  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = League, date = Date, season = Season, home = Home, away = Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
+    dplyr::bind_rows() %>%
     na.omit()
 
 }
@@ -52,10 +52,10 @@ Read_new_leagues <- function(URL){
 #' @export
 get_historical_buchdata <- function(urls){
   new_leagues <- Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx') %>%
-    filter(str_detect(league, 'MLS|Liga MX|Serie')) %>%
-    mutate(date = as_date(date)) %>%
-    filter(season >= 2018) %>%
-    mutate(season = case_when(season == '2018' ~ '1819',
+    dplyr::filter(stringr::str_detect(league, 'MLS|Liga MX|Serie')) %>%
+    dplyr::mutate(date = lubridate::as_date(date)) %>%
+    dplyr::filter(season >= 2018) %>%
+    dplyr::mutate(season = dplyr::case_when(season == '2018' ~ '1819',
                               season == '2019' ~ '1920',
                               season == '2020' ~ '2021',
                               season == '2021' ~ '2122',
@@ -64,27 +64,27 @@ get_historical_buchdata <- function(urls){
                               season == '2024' ~ '2425',
                               season == '2025' ~ '2526'))
 
-  All_leagues <- tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
+  All_leagues <- tibble::tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
                         filename = urls)
 
   All_leagues <- All_leagues %>%
-    mutate(data = map(filename, Read_excel_files)) %>%
-    select(-filename)
+    dplyr::mutate(data = map(filename, Read_excel_files)) %>%
+    dplyr::select(-filename)
 
   liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1")
 
   All_leagues <- All_leagues %>%
-    unnest(data) %>%
-    filter(league %in% liigat)
+    tidyr::unnest(data) %>%
+    dplyr::filter(league %in% liigat)
 
-  bind_rows(All_leagues, new_leagues) %>%
-    filter(case_when(
+  dplyr::bind_rows(All_leagues, new_leagues) %>%
+    dplyr::filter(dplyr::case_when(
       league %in% c("E1", "N1", "P1", 'Serie A') ~ season != "1819",
       TRUE ~ season == season)) %>%
-    mutate(date = as_date(date)) %>%
-    mutate(across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
-    mutate(across(c(home, away), ~tolower(.))) %>%
-    mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]")))
+    dplyr::mutate(date = lubridate::as_date(date)) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~tolower(.))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]")))
 }
 
 

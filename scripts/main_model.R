@@ -1,4 +1,4 @@
-library(bets)
+pacman::p_load(bets, tidyverse)
 
 log_in_pinnacle()
 

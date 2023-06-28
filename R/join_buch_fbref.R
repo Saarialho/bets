@@ -11,15 +11,15 @@ join_buch_fbref <- function(buch_data, fbref_data){
 
   fbref_data <- fbref_data %>%
     bets::replace_team_names(home, away, bets::team_dictionary()$fbref_name, bets::team_dictionary()$buch_name) %>%
-    select(date:a_xg) %>%
-    select(-hg, -ag)
+    dplyr::select(date:a_xg) %>%
+    dplyr::select(-hg, -ag)
 
   buch_data <- buch_data %>%
-    mutate(date_start = date - 5,
+    dplyr::mutate(date_start = date - 5,
            date_end = date + 5)
 
-  left_join(buch_data, fbref_data, by = join_by(home == home, away == away, date_start <= date, date_end >= date)) %>%
-    select(-date.y, date_start, date_end) %>%
-    rename(date = date.x)
+  dplyr::left_join(buch_data, fbref_data, by = join_by(home == home, away == away, date_start <= date, date_end >= date)) %>%
+    dplyr::select(-date.y, date_start, date_end) %>%
+    dplyr::rename(date = date.x)
 }
 
