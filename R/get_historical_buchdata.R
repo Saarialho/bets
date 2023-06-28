@@ -68,7 +68,7 @@ get_historical_buchdata <- function(urls){
                         filename = urls)
 
   All_leagues <- All_leagues %>%
-    dplyr::mutate(data = map(filename, Read_excel_files)) %>%
+    dplyr::mutate(data = purrr::map(filename, Read_excel_files)) %>%
     dplyr::select(-filename)
 
   liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1")

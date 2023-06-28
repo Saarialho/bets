@@ -30,7 +30,7 @@ get_main_leagues <- function(URL, liigat){
 
   message("Solving market goals...")
 
-  Mainleagues <- expg_from_probabilities(dplyr::select(Mainleagues, FHP:FAP), rho = -0.13) %>%
+  Mainleagues <- goalmodel::expg_from_probabilities(dplyr::select(Mainleagues, FHP:FAP), rho = -0.13) %>%
     purrr::pluck(1) %>%
     tibble::as_tibble() %>%
     dplyr::select(mhxg = 1, maxg = 2) %>%
@@ -56,7 +56,7 @@ get_extra_leagues <- function(URL, liigat){
   Mainleagues <- temp %>%
     readxl::excel_sheets() %>%
     purrr::set_names() %>%
-    purrr::map(read_excel, path = temp)
+    purrr::map(readxl::read_excel, path = temp)
 
   Mainleagues <- Mainleagues %>%
     purrr::keep(~has_element(names(.),"PH")) %>%

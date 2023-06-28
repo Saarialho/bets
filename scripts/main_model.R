@@ -46,6 +46,7 @@ latest_comps <- vroom::vroom('https://raw.githubusercontent.com/JaseZiv/worldfoo
 
 fbref_leagues <- get_fbref_data(seasons = 2023) %>%
   filter(!is.na(hg))
+
 fbref_leagues %>%
   group_by(league) %>%
   summarise(max_date = max(date))
