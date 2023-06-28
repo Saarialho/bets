@@ -2,6 +2,11 @@ library(bets)
 
 log_in_pinnacle()
 
+coefs <- bets::lasso_coefs
+configs <- bets::lasso_models %>%
+  left_join(coefs, by = c('model_id' = 'term')) %>%
+  arrange(desc(estimate))
+
 league_specs <-
   tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
          league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'))
@@ -13,17 +18,12 @@ pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
   left_join(league_specs)
 pinnacle_odds
 
-coefs <- bets::lasso_coefs
-configs <- bets::lasso_models %>%
-  left_join(coefs, by = c('model_id' = 'term')) %>%
-  arrange(desc(estimate))
-
 main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx',
                                        pinnacle_odds$league)
 new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
                                        pinnacle_odds$league)
-buch_leagues <- bind_rows(main_leagues, new_leagues)
 
+buch_leagues <- bind_rows(main_leagues, new_leagues)
 buch_leagues
 
 active_leagues <- buch_leagues %>%
@@ -121,8 +121,6 @@ team_names_map <- preds %>%
   distinct(league, closest_match, .keep_all = TRUE)
 team_names_map
 
-#jatka tasta!
-
 intercept <- pull(filter(lasso_coefs, term == '(Intercept)'), estimate)
 side_x <- pull(filter(lasso_coefs, term == 'side_X'), estimate)
 
@@ -195,21 +193,10 @@ if(nrow(betit) > 0){
   betit %>%
     arrange(desc(league)) %>%
     select(date:p2, EV1:EV2_hdp, hdp, kerroin, bet) %>% View
+
+  save_bets(betit, arviot = FALSE)
 }
 
-hist_bets <- bets::hist_bets %>%
-  bind_rows(betit %>%
-              #laita # merkki eteen jos extra liiga data tullut
-              #filter(!str_detect(league, 'Liga|MLS|Serie')) %>%
-              mutate(kohde = as.numeric(kohde)))
-use_data(hist_bets, overwrite = TRUE)
 
-hist_arviot <- bets::hist_arviot %>%
-  bind_rows(arviot %>%
-              filter(!(id %in% hist_arviot$id), dts > 1) %>%
-              #laita # merkki eteen jos extra liiga data tullut
-              #filter(!str_detect(league, 'Liga|MLS|Serie')) %>%
-              mutate(kohde = as.numeric(kohde)))
-use_data(hist_arviot, overwrite = TRUE)
-
+save_bets(arviot, arviot = TRUE)
 
