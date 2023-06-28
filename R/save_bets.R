@@ -13,7 +13,7 @@ save_bets <- function(to_save, arviot = TRUE){
                          dplyr::filter(!(id %in% hist_arviot$id), dts > 1) %>%
                          dplyr::mutate(kohde = as.numeric(kohde)))
 
-    use_data(hist_arviot, overwrite = TRUE)
+    usethis::use_data(hist_arviot, overwrite = TRUE)
 
   } else {
 
@@ -24,7 +24,7 @@ save_bets <- function(to_save, arviot = TRUE){
                   dplyr::filter(!(id %in% hist_bets$id), dts > 1) %>%
                   dplyr::mutate(kohde = as.numeric(kohde)))
 
-    use_data(hist_bets, overwrite = TRUE)
+    usethis::use_data(hist_bets, overwrite = TRUE)
 
   }
 }
