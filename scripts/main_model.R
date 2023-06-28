@@ -1,4 +1,7 @@
-pacman::p_load(bets, tidyverse)
+pacman::p_load(bets, tidyverse, pushoverr)
+
+set_pushover_user(user = Sys.getenv('PUSHOVER_USER'))
+set_pushover_app(token = Sys.getenv('PUSHOVER_APP'))
 
 log_in_pinnacle()
 
@@ -191,13 +194,21 @@ betit <- arviot %>%
   mutate(across(where(is.numeric), ~ round(., 3)))
 
 if(nrow(betit) > 0){
-  betit %>%
+  notification <- betit %>%
     arrange(desc(league)) %>%
-    select(date:p2, EV1:EV2_hdp, hdp, kerroin, bet) %>% View
+    select(team1, team2, mlh:mla, kerroin, bet)
 
-  save_bets(betit, arviot = FALSE)
+  png("bets.png", height=400, width=1400, res = 200)
+  p <- gridExtra::grid.arrange(gridExtra::tableGrob(notification))
+  dev.off()
+
+  pushover(
+    message = "Look at those bets!",
+    attachment = "bets.png"
+  )
+
 }
 
-
+save_bets(betit, arviot = FALSE)
 save_bets(arviot, arviot = TRUE)
 
