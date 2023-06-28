@@ -19,7 +19,6 @@ pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
   group_by(league.id) %>%
   nest(pelit = c(-league.id)) %>%
   left_join(league_specs)
-pinnacle_odds
 
 main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx',
                                        pinnacle_odds$league)
@@ -189,7 +188,7 @@ arviot
 
 betit <- arviot %>%
   filter(EV > 0.05, dts >= 2) %>%
-  #filter(!(id %in% bets::hist_bets$id)) %>%
+  filter(!(id %in% bets::hist_bets$id)) %>%
   mutate(bet = pmap_dbl(list(EV, kerroin, maxbet), bets::kelly_bet)) %>%
   mutate(across(where(is.numeric), ~ round(., 3)))
 
