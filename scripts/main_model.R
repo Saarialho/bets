@@ -1,8 +1,5 @@
 pacman::p_load(bets, tidyverse, pushoverr)
 
-set_pushover_user(user = Sys.getenv('PUSHOVER_USER'))
-set_pushover_app(token = Sys.getenv('PUSHOVER_APP'))
-
 log_in_pinnacle()
 
 coefs <- bets::lasso_coefs
@@ -128,24 +125,19 @@ intercept <- pull(filter(lasso_coefs, term == '(Intercept)'), estimate)
 side_x <- pull(filter(lasso_coefs, term == 'side_X'), estimate)
 
 multi_predictions <- preds %>%
-  select(-periods.spreads, -teams) %>%
+  select(-teams) %>%
   pivot_longer(cols = p1:p2, names_to = 'side', values_to = 'pred') %>%
   left_join(lasso_coefs %>% select(model_id  = term, estimate), by = 'model_id') %>%
-  group_by(date, league, team1, team2, mlh, mld, mla, maxbet, side) %>%
+  group_by(date, league, team1, team2, mlh, mld, mla, maxbet, side, periods.spreads) %>%
   summarise(pred = sum(pred*estimate)+intercept, .groups = 'keep') %>%
   mutate(pred = if_else(side == 'pd', pred + side_x, pred)) %>%
   pivot_wider(names_from = side, values_from = pred) %>%
-  ungroup()
-
-spreads <- preds %>%
   ungroup() %>%
-  distinct(league, .keep_all = TRUE) %>%
   unnest(periods.spreads) %>%
-  filter(hdp %in% c(0,0.5,-0.5)) %>%
-  select(date, team1, team2, hdp, home, away)
+  filter(hdp %in% c(0,0.5,-0.5))
 
 arviot <- multi_predictions %>%
-  left_join(spreads, by = join_by(date, team1, team2)) %>%
+  #left_join(spreads, by = join_by(date, team1, team2)) %>%
   mutate(EV1 = p1*mlh-1,
          EVD = pd*mld-1,
          EV2 = p2*mla-1) %>%
@@ -173,6 +165,8 @@ arviot <- multi_predictions %>%
   mutate_if(is.numeric, round, 3)
 arviot
 
+save_bets(arviot, arviot = TRUE)
+
 #tama myohemmin!
 # if(arviot %>% filter(is.na(p1)) %>% nrow > 0){
 #   message('ongelmia nimissä')
@@ -186,16 +180,25 @@ arviot
 #     unnest(pred)
 # }
 
+
+hist_bets <- qs::qread("~/Documents/bets/output/multimodel_bets.rds")
+
 betit <- arviot %>%
   filter(EV > 0.05, dts >= 2) %>%
-  filter(!(id %in% bets::hist_bets$id)) %>%
+  filter(!(id %in% hist_bets$id)) %>%
   mutate(bet = pmap_dbl(list(EV, kerroin, maxbet), bets::kelly_bet)) %>%
   mutate(across(where(is.numeric), ~ round(., 3)))
 
 if(nrow(betit) > 0){
+
+  save_bets(betit, arviot = FALSE)
+
   notification <- betit %>%
     arrange(desc(league)) %>%
     select(team1, team2, mlh:mla, kerroin, bet)
+
+  set_pushover_user(user = Sys.getenv('PUSHOVER_USER'))
+  set_pushover_app(token = Sys.getenv('PUSHOVER_APP'))
 
   png("bets.png", height=400, width=1400, res = 200)
   p <- gridExtra::grid.arrange(gridExtra::tableGrob(notification))
@@ -207,7 +210,4 @@ if(nrow(betit) > 0){
   )
 
 }
-
-save_bets(betit, arviot = FALSE)
-save_bets(arviot, arviot = TRUE)
 

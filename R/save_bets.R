@@ -6,25 +6,21 @@ save_bets <- function(to_save, arviot = TRUE){
 
   if(arviot){
 
-    hist_arviot <- bets::hist_arviot
-
-    hist_arviot <- hist_arviot %>%
+    hist_arviot <- qs::qread("~/Documents/bets/output/multimodel_arviot.rds") %>%
       dplyr::bind_rows(to_save %>%
                          dplyr::filter(!(id %in% hist_arviot$id), dts > 1) %>%
                          dplyr::mutate(kohde = as.numeric(kohde)))
 
-    usethis::use_data(hist_arviot, overwrite = TRUE)
+    hist_arviot %>% qs::qsave("~/Documents/bets/output/multimodel_arviot.rds")
 
   } else {
 
-    hist_bets <- bets::hist_bets
-
-    hist_bets <- hist_bets %>%
+    hist_bets <- qs::qread("~/Documents/bets/output/multimodel_bets.rds") %>%
       dplyr::bind_rows(to_save %>%
-                  dplyr::filter(!(id %in% hist_bets$id), dts > 1) %>%
-                  dplyr::mutate(kohde = as.numeric(kohde)))
+                         dplyr::filter(!(id %in% hist_bets$id), dts > 1) %>%
+                         dplyr::mutate(kohde = as.numeric(kohde)))
 
-    usethis::use_data(hist_bets, overwrite = TRUE)
+    hist_bets %>% qs::qsave("~/Documents/bets/output/multimodel_bets.rds")
 
   }
 }
