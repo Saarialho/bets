@@ -134,6 +134,9 @@ multi_predictions <- preds %>%
   pivot_wider(names_from = side, values_from = pred) %>%
   ungroup() %>%
   unnest(periods.spreads) %>%
+  group_by(date, league, team1) %>%
+  fill(max, .direction = 'downup') %>%
+  ungroup() %>%
   filter(hdp %in% c(0,0.5,-0.5))
 
 arviot <- multi_predictions %>%
