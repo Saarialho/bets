@@ -18,7 +18,7 @@ join_buch_fbref <- function(buch_data, fbref_data){
     dplyr::mutate(date_start = date - 5,
            date_end = date + 5)
 
-  dplyr::left_join(buch_data, fbref_data, by = join_by(home == home, away == away, date_start <= date, date_end >= date)) %>%
+  dplyr::left_join(buch_data, fbref_data, by = dplyr::join_by(home == home, away == away, date_start <= date, date_end >= date)) %>%
     dplyr::select(-date.y, date_start, date_end) %>%
     dplyr::rename(date = date.x)
 }

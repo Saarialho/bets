@@ -1,31 +1,32 @@
 #' helper fun to save bets
 #' @param to_save data to ...
 #' @param arviot vai bets kumpi tallennetaan
+#' @param totals logical
 #' @export
-save_bets <- function(to_save, arviot = TRUE){
+save_bets <- function(to_save, arviot = TRUE, totals = TRUE){
 
-  if(arviot){
+  path_dic <-
+    tibble::tibble(paths = c('multimodel_arviot.rds', 'multimodel_bets.rds', 'totals_arviot.rds', 'totals_bets.rds'),
+           totals_lgl = c(FALSE, FALSE, TRUE, TRUE),
+           arviot_lgl = c(TRUE, FALSE, TRUE, FALSE))
 
-    hist_arviot <- qs::qread("~/Documents/bets/output/multimodel_arviot.rds")
+  file_end <- path_dic %>%
+    dplyr::filter(totals_lgl == totals & arviot_lgl == arviot) %>%
+    dplyr::pull(paths)
 
-    updated <- hist_arviot %>%
-      dplyr::bind_rows(to_save %>%
-                         dplyr::filter(!(id %in% hist_arviot$id), dts > 1) %>%
-                         dplyr::mutate(kohde = as.numeric(kohde)))
+  path <- file.path("~/Documents/bets/output", file_end)
+  old_data <- qs::qread(path)
 
-    updated %>% qs::qsave("~/Documents/bets/output/multimodel_arviot.rds")
+  updated <- old_data %>%
+    dplyr::mutate(kohde = as.numeric(kohde)) %>%
+    dplyr::bind_rows(to_save %>%
+                       dplyr::filter(!(id %in% old_data$id), dts > 1) %>%
+                       dplyr::mutate(kohde = as.numeric(kohde)))
 
-  } else {
+  updated %>% qs::qsave(path)
 
-    hist_bets <- qs::qread("~/Documents/bets/output/multimodel_bets.rds")
-
-    updated <- hist_bets %>%
-      dplyr::bind_rows(to_save %>%
-                         dplyr::filter(!(id %in% hist_bets$id), dts > 1) %>%
-                         dplyr::mutate(kohde = as.numeric(kohde)))
-
-    updated %>% qs::qsave("~/Documents/bets/output/multimodel_bets.rds")
-
-  }
 }
+
+path <- file.path("~/Documents/bets/output", 'totals_arviot.rds')
+old_data <- qs::qread(path)
 

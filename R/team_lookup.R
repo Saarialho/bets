@@ -78,7 +78,7 @@ tibble::tribble(
    "central cordoba",        "central cordoba",        "Central Cordoba",
        "cf montreal",            "cf montreal",            "CF Montreal",
        "chapecoense",          "chapecoensesc",          "Chapecoensesc",
-         "charlotte",              "charlotte",              "Charlotte",
+         "charlotte",              "charlotte",           "Charlotte FC",
       "charlton ath",               "charlton",               "Charlton",
             "chaves",                 "chaves",                 "Chaves",
            "chelsea",                "chelsea",                "Chelsea",

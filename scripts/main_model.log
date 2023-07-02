@@ -2510,3 +2510,1361 @@ Joining with `by = join_by(league)`
 # i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
 #   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
 #   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-06-30 20:00:02| Terms and Conditions Accepted
+2023-06-30 20:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-06-30 20:00:02| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 38 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-06-30 Liga Profe~ Plat~ Lanus  3.14  2.82  2.78    900   0.5  1.48  2.77
+ 2 2023-07-01 Liga Profe~ Atle~ Unio~  2.24  3.15  3.69    900  -0.5  2.23  1.70
+ 3 2023-07-01 Liga Profe~ Barr~ Rive~  7.61  4.62  1.45    450   0.5  2.92  1.44
+ 4 2023-07-01 Liga Profe~ Estu~ Cent~  1.60  3.92  6.43    450   0    1.20  4.85
+ 5 2023-07-01 Liga Profe~ San ~ Rosa~  1.92  3.05  5.3     450   0    1.32  3.65
+ 6 2023-07-01 Liga Profe~ Vele~ Arse~  1.78  3.22  6.08    900  -0.5  1.78  2.13
+ 7 2023-07-01 MLS         CF M~ New ~  2.39  3.49  3.09    600   0    1.72  2.23
+ 8 2023-07-01 MLS         Colu~ New ~  1.98  3.64  4.01    600  -0.5  1.98  1.92
+ 9 2023-07-01 MLS         FC C~ New ~  2.07  3.76  3.58    600  -0.5  2.07  1.85
+10 2023-07-01 MLS         Inte~ Aust~  2.47  3.73  2.82    600   0    1.83  2.09
+# i 28 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+i Pushover user was already set to `urwewkdm1w9r4sr879stmwjzewy6xp`
+i Pushover app was already set to `a3978x9yshmeprwctrkjtvg6xgipov`
+2023-06-30 22:00:02| Terms and Conditions Accepted
+2023-06-30 22:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-06-30 22:00:03| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 38 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-06-30 Liga Profe~ Plat~ Lanus  3.07  2.8   2.86   1500   0.5  1.47  2.84
+ 2 2023-07-01 Liga Profe~ Atle~ Unio~  2.25  3.16  3.66    900  -0.5  2.24  1.70
+ 3 2023-07-01 Liga Profe~ Barr~ Rive~  7.55  4.48  1.46    600   0.5  2.85  1.45
+ 4 2023-07-01 Liga Profe~ Estu~ Cent~  1.58  3.96  6.62    450   0    1.19  5.01
+ 5 2023-07-01 Liga Profe~ San ~ Rosa~  1.93  3.06  5.23    450   0    1.32  3.61
+ 6 2023-07-01 Liga Profe~ Vele~ Arse~  1.76  3.26  6.2     900  -0.5  1.75  2.16
+ 7 2023-07-01 MLS         CF M~ New ~  2.39  3.49  3.09    600   0    1.72  2.23
+ 8 2023-07-01 MLS         Colu~ New ~  1.98  3.64  4.01    600  -0.5  1.98  1.92
+ 9 2023-07-01 MLS         FC C~ New ~  2.07  3.76  3.58    600  -0.5  2.07  1.85
+10 2023-07-01 MLS         Inte~ Aust~  2.47  3.73  2.82    600   0    1.83  2.09
+# i 28 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 00:00:03| Terms and Conditions Accepted
+2023-07-01 00:00:03| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 00:00:03| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 38 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-06-30 Liga Profe~ Plat~ Lanus  3.03  2.77  2.93   1500   0.5  1.45  2.91
+ 2 2023-07-01 Liga Profe~ Atle~ Unio~  2.37  3.12  3.43   1500  -0.5  2.36  1.64
+ 3 2023-07-01 Liga Profe~ Barr~ Rive~  7.55  4.48  1.46    600   0.5  2.85  1.45
+ 4 2023-07-01 Liga Profe~ Estu~ Cent~  1.58  3.96  6.62    450   0    1.19  5.01
+ 5 2023-07-01 Liga Profe~ San ~ Rosa~  1.93  3.06  5.23    600   0    1.32  3.61
+ 6 2023-07-01 Liga Profe~ Vele~ Arse~  1.74  3.29  6.4    1500  -0.5  1.72  2.2 
+ 7 2023-07-01 MLS         CF M~ New ~  2.39  3.49  3.09    600   0    1.72  2.23
+ 8 2023-07-01 MLS         Colu~ New ~  1.98  3.64  4.01    600  -0.5  1.98  1.92
+ 9 2023-07-01 MLS         FC C~ New ~  2.02  3.78  3.73    600   0    1.50  2.77
+10 2023-07-01 MLS         Inte~ Aust~  2.48  3.7   2.82    600   0    1.83  2.08
+# i 28 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 02:00:02| Terms and Conditions Accepted
+2023-07-01 02:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 02:00:03| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 38 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Atle~ Unio~  2.37  3.11  3.46   1500  -0.5  2.36  1.64
+ 2 2023-07-01 Liga Profe~ Barr~ Rive~  7.55  4.48  1.46    600   0.5  2.85  1.45
+ 3 2023-07-01 Liga Profe~ Estu~ Cent~  1.58  3.96  6.62    600   0    1.19  5.01
+ 4 2023-07-01 Liga Profe~ Plat~ Lanus  3.67  2.06  3.42   1875   0.5  1.34  3.39
+ 5 2023-07-01 Liga Profe~ San ~ Rosa~  1.93  3.06  5.23    600   0    1.32  3.61
+ 6 2023-07-01 Liga Profe~ Vele~ Arse~  1.75  3.27  6.32   1500  -0.5  1.74  2.18
+ 7 2023-07-01 MLS         CF M~ New ~  2.39  3.48  3.1     600   0    1.72  2.24
+ 8 2023-07-01 MLS         Colu~ New ~  1.99  3.6   4.02    600  -0.5  1.99  1.92
+ 9 2023-07-01 MLS         FC C~ New ~  2.02  3.79  3.71    600   0    1.50  2.76
+10 2023-07-01 MLS         Inte~ Aust~  2.57  3.74  2.7     600   0    1.9   2   
+# i 28 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 04:00:02| Terms and Conditions Accepted
+2023-07-01 04:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 04:00:03| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 38 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Atle~ Unio~  1.38  4.5   9.58   1875  -0.5  2.43  1.61
+ 2 2023-07-01 Liga Profe~ Barr~ Rive~  7.6   4.5   1.46    600   0.5  2.87  1.45
+ 3 2023-07-01 Liga Profe~ Estu~ Cent~  1.58  3.95  6.65    600   0    1.19  5.03
+ 4 2023-07-01 Liga Profe~ San ~ Rosa~  1.93  3.06  5.23    600   0    1.32  3.61
+ 5 2023-07-01 Liga Profe~ Vele~ Arse~  2.55  2.32  4.4    1875  -0.5  2.55  1.56
+ 6 2023-07-01 MLS         CF M~ New ~  2.39  3.48  3.1     900   0    1.72  2.24
+ 7 2023-07-01 MLS         Colu~ New ~  1.99  3.58  4.03    900  -0.5  1.99  1.91
+ 8 2023-07-01 MLS         FC C~ New ~  2.02  3.79  3.71    900   0    1.50  2.76
+ 9 2023-07-01 MLS         Inte~ Aust~  2.56  3.72  2.71    900   0    1.9   2.01
+10 2023-07-01 MLS         Orla~ Chic~  1.81  3.92  4.47    900  -0.5  1.81  2.1 
+# i 28 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 06:00:02| Terms and Conditions Accepted
+2023-07-01 06:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 06:00:02| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 36 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Barr~ Rive~  7.65  4.53  1.46    600   0.5  2.89  1.44
+ 2 2023-07-01 Liga Profe~ Estu~ Cent~  1.57  3.97  6.74    600   0    1.19  5.11
+ 3 2023-07-01 Liga Profe~ San ~ Rosa~  1.9   3.1   5.38    600   0    1.30  3.73
+ 4 2023-07-01 MLS         CF M~ New ~  2.39  3.48  3.1     900   0    1.72  2.24
+ 5 2023-07-01 MLS         Colu~ New ~  1.99  3.58  4.03    900  -0.5  1.99  1.91
+ 6 2023-07-01 MLS         FC C~ New ~  2.02  3.79  3.71    900   0    1.50  2.76
+ 7 2023-07-01 MLS         Inte~ Aust~  2.58  3.67  2.73    900   0    1.9   2.01
+ 8 2023-07-01 MLS         Orla~ Chic~  1.81  3.92  4.47    900  -0.5  1.81  2.1 
+ 9 2023-07-01 MLS         Toro~ Real~  2.38  3.79  2.91    900   0    1.76  2.16
+10 2023-07-01 Serie A     Bahia Grem~  2.45  3.42  3.06    900   0.5  1.42  3.02
+# i 26 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 08:00:02| Terms and Conditions Accepted
+2023-07-01 08:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 08:00:02| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 36 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Barr~ Rive~  7.65  4.53  1.46    600   0.5  2.89  1.44
+ 2 2023-07-01 Liga Profe~ Estu~ Cent~  1.57  3.95  6.74    600   0    1.19  5.09
+ 3 2023-07-01 Liga Profe~ San ~ Rosa~  1.88  3.11  5.42    600   0    1.30  3.78
+ 4 2023-07-01 MLS         CF M~ New ~  2.32  3.5   3.21    900   0    1.68  2.32
+ 5 2023-07-01 MLS         Colu~ New ~  2.02  3.56  3.96    900  -0.5  2.02  1.89
+ 6 2023-07-01 MLS         FC C~ New ~  2.02  3.78  3.7     900   0    1.5   2.75
+ 7 2023-07-01 MLS         Inte~ Aust~  2.58  3.67  2.73    900   0    1.9   2.01
+ 8 2023-07-01 MLS         Orla~ Chic~  1.81  3.93  4.47    900  -0.5  1.81  2.11
+ 9 2023-07-01 MLS         Toro~ Real~  2.34  3.81  2.95    900   0    1.74  2.2 
+10 2023-07-01 Serie A     Bahia Grem~  2.49  3.43  3       900  -0.5  2.47  1.60
+# i 26 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 10:00:02| Terms and Conditions Accepted
+2023-07-01 10:00:02| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 10:00:03| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 36 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Barr~ Rive~  7.65  4.53  1.46    900   0.5  2.89  1.44
+ 2 2023-07-01 Liga Profe~ Estu~ Cent~  1.57  3.95  6.74    600   0    1.19  5.09
+ 3 2023-07-01 Liga Profe~ San ~ Rosa~  1.9   3.09  5.36    600   0    1.31  3.72
+ 4 2023-07-01 MLS         CF M~ New ~  2.3   3.54  3.22    900   0    1.66  2.34
+ 5 2023-07-01 MLS         Colu~ New ~  2.03  3.56  3.92    900  -0.5  2.03  1.88
+ 6 2023-07-01 MLS         FC C~ New ~  2     3.81  3.74    900   0    1.49  2.79
+ 7 2023-07-01 MLS         Inte~ Aust~  2.59  3.63  2.74    900   0    1.9   2.01
+ 8 2023-07-01 MLS         Orla~ Chic~  1.81  3.93  4.47    900  -0.5  1.81  2.11
+ 9 2023-07-01 MLS         Toro~ Real~  2.35  3.8   2.95    900   0    1.74  2.2 
+10 2023-07-01 Serie A     Bahia Grem~  2.47  3.43  3.02    900   0.5  1.43  2.99
+# i 26 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 12:00:03| Terms and Conditions Accepted
+2023-07-01 12:00:04| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 12:00:04| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+Joining with `by = join_by(league.id)`
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tibble: 2,347 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,337 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tibble: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+Joining with `by = join_by(league)`
+# A tibble: 0 x 3
+# i 3 variables: league <chr>, closest_match <chr>, pin_teams <???>
+# A tibble: 36 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet   hdp  home  away
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Barr~ Rive~  7.74  4.59  1.45    900   0.5  2.93  1.43
+ 2 2023-07-01 Liga Profe~ Estu~ Cent~  1.57  3.95  6.74    600   0    1.19  5.09
+ 3 2023-07-01 Liga Profe~ San ~ Rosa~  1.89  3.12  5.33    900   0    1.31  3.71
+ 4 2023-07-01 MLS         CF M~ New ~  2.33  3.52  3.19    900   0    1.68  2.31
+ 5 2023-07-01 MLS         Colu~ New ~  2.02  3.59  3.91    900  -0.5  2.01  1.89
+ 6 2023-07-01 MLS         FC C~ New ~  1.98  3.85  3.78    900   0    1.48  2.83
+ 7 2023-07-01 MLS         Inte~ Aust~  2.61  3.63  2.71    900   0    1.92  1.99
+ 8 2023-07-01 MLS         Orla~ Chic~  1.81  3.93  4.47    900  -0.5  1.81  2.11
+ 9 2023-07-01 MLS         Toro~ Real~  2.34  3.81  2.95    900   0    1.74  2.2 
+10 2023-07-01 Serie A     Bahia Grem~  2.47  3.44  3.01    900   0.5  1.43  2.98
+# i 26 more rows
+# i 16 more variables: altLineId <dbl>, max <dbl>, p1 <dbl>, p2 <dbl>,
+#   pd <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>
+2023-07-01 14:00:01| Terms and Conditions Accepted
+2023-07-01 14:00:01| Pulling Fixtures for Sport ID: 29, with League ID(s): 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697
+2023-07-01 14:00:02| Pulling Odds for - sportid: 29 leagueids: 2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697 islive: FALSE oddsformat: DECIMAL tableformat: subtables
+trying URL 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 4495506 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+Solving market goals...
+Warning message:
+The `x` argument of `as_tibble.matrix()` must have unique column names if
+`.name_repair` is omitted as of tibble 2.0.0.
+i Using compatibility `.name_repair`.
+i The deprecated feature was likely used in the bets package.
+  Please report the issue at <https://github.com/Saarialho/bets/issues>. 
+trying URL 'https://www.football-data.co.uk/new/new_leagues_data.xlsx'
+Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' length 5154564 bytes (4.9 MB)
+==================================================
+downloaded 4.9 MB
+
+Solving market goals...
+There were 45 warnings (use warnings() to see them)
+# A tidytable: 2,653 x 15
+   league date       home       away   PSCH  PSCD  PSCA    FHP   FDP   FAP FTR  
+   <chr>  <date>     <chr>      <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <chr>
+ 1 E0     2022-08-05 crystal p~ arse~  4.58  3.63  1.88 0.210  0.267 0.523 A    
+ 2 E0     2022-08-06 fulham     live~ 10.5   6.5   1.29 0.0871 0.146 0.767 D    
+ 3 E0     2022-08-06 bournemou~ asto~  4.09  3.59  2    0.237  0.271 0.492 H    
+ 4 E0     2022-08-06 leeds      wolv~  2.45  3.44  3.09 0.401  0.283 0.316 H    
+ 5 E0     2022-08-06 newcastle  nott~  1.57  4.22  6.6  0.628  0.228 0.143 H    
+ 6 E0     2022-08-06 tottenham  sout~  1.39  5.34  8.55 0.712  0.179 0.109 H    
+ 7 E0     2022-08-06 everton    chel~  6.89  4.16  1.56 0.136  0.232 0.632 A    
+ 8 E0     2022-08-07 leicester  bren~  1.96  3.69  4.29 0.505  0.266 0.228 D    
+ 9 E0     2022-08-07 man united brig~  1.81  3.86  4.72 0.545  0.251 0.204 A    
+10 E0     2022-08-07 west ham   man ~  8     5.35  1.41 0.118  0.180 0.702 A    
+# i 2,643 more rows
+# i 4 more variables: FTHG <dbl>, FTAG <dbl>, mhxg <dbl>, maxg <dbl>
+Rows: 2016 Columns: 15
+-- Column specification --------------------------------------------------------
+Delimiter: ","
+chr (13): competition_type, competition_name, country, gender, governing_bod...
+dbl  (1): season_end_year
+lgl  (1): is_completed
+
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Registered S3 methods overwritten by 'readr':
+  method                    from 
+  as.data.frame.spec_tbl_df vroom
+  as_tibble.spec_tbl_df     vroom
+  format.col_spec           vroom
+  print.col_spec            vroom
+  print.collector           vroom
+  print.date_names          vroom
+  print.locale              vroom
+  str.col_spec              vroom
+# A tidytable: 11 x 2
+   league                               max_date  
+   <chr>                                <date>    
+ 1 "Campeonato Brasileiro S\u00e9rie A" 2023-06-26
+ 2 "EFL Championship"                   2023-05-27
+ 3 "Eredivisie"                         2023-06-11
+ 4 "Fu\u00dfball-Bundesliga"            2023-06-05
+ 5 "La Liga"                            2023-06-04
+ 6 "Liga MX"                            2023-05-28
+ 7 "Ligue 1"                            2023-06-03
+ 8 "Major League Soccer"                2023-06-24
+ 9 "Premier League"                     2023-05-28
+10 "Primeira Liga"                      2023-06-11
+11 "Serie A"                            2023-06-11
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate   mean     sd   p0
+1 h_xg          Liga Profesional       294             0 NaN    NA     NA  
+2 h_xg          MLS                      0             1   1.47  0.739  0.1
+3 h_xg          Serie A                  0             1   1.56  0.787  0.2
+     p25  p50  p75 p100 hist                            
+1 NA     NA   NA   NA   " "                             
+2  0.9    1.4  1.8  4.4 "\u2585\u2587\u2583\u2581\u2581"
+3  0.975  1.5  1.9  5.3 "\u2586\u2587\u2582\u2581\u2581"
+-- Data Summary ------------------------
+                           Values    
+Name                       Piped data
+Number of rows             693       
+Number of columns          2         
+_______________________              
+Column type frequency:               
+  numeric                  1         
+________________________             
+Group variables            league    
+
+-- Variable type: numeric ------------------------------------------------------
+  skim_variable league           n_missing complete_rate mean    sd    p0   p25
+1 h_xg          Liga Profesional         0             1 1.34 0.347 0.634 1.12 
+2 h_xg          MLS                      0             1 1.47 0.739 0.1   0.9  
+3 h_xg          Serie A                  0             1 1.56 0.787 0.2   0.975
+   p50  p75 p100 hist                            
+1 1.28 1.50 3.11 "\u2583\u2587\u2582\u2581\u2581"
+2 1.4  1.8  4.4  "\u2585\u2587\u2583\u2581\u2581"
+3 1.5  1.9  5.3  "\u2586\u2587\u2582\u2581\u2581"
+# A tidytable: 87 x 4
+   league           model_id              fit        teams     
+   <chr>            <glue>                <list>     <list>    
+ 1 Liga Profesional model_0.00067_0.84674 <goalmodl> <chr [28]>
+ 2 Liga Profesional model_0.00187_0.82428 <goalmodl> <chr [28]>
+ 3 Liga Profesional model_0.00247_0.85194 <goalmodl> <chr [28]>
+ 4 Liga Profesional model_0.00274_0.7744  <goalmodl> <chr [28]>
+ 5 Liga Profesional model_0.00381_0.8884  <goalmodl> <chr [28]>
+ 6 Liga Profesional model_0.00603_0.76557 <goalmodl> <chr [28]>
+ 7 Liga Profesional model_0.00622_0.86001 <goalmodl> <chr [28]>
+ 8 Liga Profesional model_0.00933_0.81273 <goalmodl> <chr [28]>
+ 9 Liga Profesional model_0.0096_0.8038   <goalmodl> <chr [28]>
+10 Liga Profesional model_0.01469_0.71732 <goalmodl> <chr [28]>
+# i 77 more rows
+# A tidytable: 36 x 27
+   date       league      team1 team2   mlh   mld   mla maxbet    p1    p2    pd
+   <date>     <chr>       <chr> <chr> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+ 1 2023-07-01 Liga Profe~ Barr~ Rive~  7.85  4.63  1.44    900 0.138 0.646 0.216
+ 2 2023-07-01 Liga Profe~ Estu~ Cent~  1.60  3.89  6.42    900 0.622 0.13  0.248
+ 3 2023-07-01 Liga Profe~ San ~ Rosa~  1.92  3.07  5.34    900 0.5   0.193 0.307
+ 4 2023-07-01 MLS         CF M~ New ~  2.36  3.51  3.14    900 0.389 0.329 0.282
+ 5 2023-07-01 MLS         Colu~ New ~  2.04  3.54  3.89    900 0.489 0.243 0.268
+ 6 2023-07-01 MLS         FC C~ New ~  1.95  3.93  3.82    900 0.473 0.274 0.254
+ 7 2023-07-01 MLS         Inte~ Aust~  2.61  3.64  2.71    900 0.394 0.335 0.271
+ 8 2023-07-01 MLS         Orla~ Chic~  1.81  3.93  4.47    900 0.52  0.222 0.258
+ 9 2023-07-01 MLS         Toro~ Real~  2.39  3.84  2.86    900 0.483 0.259 0.258
+10 2023-07-01 Serie A     Bahia Grem~  2.33  3.52  3.19   1200 0.396 0.329 0.274
+# i 26 more rows
+# i 16 more variables: hdp <dbl>, home <dbl>, away <dbl>, altLineId <dbl>,
+#   max <dbl>, EV1 <dbl>, EVD <dbl>, EV2 <dbl>, EV1_hdp <dbl>, EV2_hdp <dbl>,
+#   max_hdp <dbl>, EV <dbl>, kerroin <dbl>, kohde <fct>, dts <dbl>, id <chr>

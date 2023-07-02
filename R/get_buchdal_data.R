@@ -12,7 +12,7 @@ get_main_leagues <- function(URL, liigat){
 
   Mainleagues <- temp %>%
     readxl::excel_sheets() %>%
-    keep(., ~ . %in% liigat) %>%
+    purrr::keep(., ~ . %in% liigat) %>%
     purrr::set_names() %>%
     purrr::map(readxl::read_excel, path = temp) %>%
     purrr::keep(~purrr:::has_element(names(.),"PSCH"))
@@ -36,9 +36,9 @@ get_main_leagues <- function(URL, liigat){
     dplyr::select(mhxg = 1, maxg = 2) %>%
     dplyr::bind_cols(Mainleagues) %>%
     dplyr::select(league:PSCA, FHP:FAP, FTR:FTAG, mhxg, maxg) %>%
-    dplyr::mutate(across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
-    dplyr::mutate(across(c(home, away), ~tolower(.))) %>%
-    dplyr::mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]")))
+    dplyr::mutate(dplyr::across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~tolower(.))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]")))
 
 }
 #' get extra leagues data from buchdal
@@ -59,7 +59,7 @@ get_extra_leagues <- function(URL, liigat){
     purrr::map(readxl::read_excel, path = temp)
 
   Mainleagues <- Mainleagues %>%
-    purrr::keep(~has_element(names(.),"PH")) %>%
+    purrr::keep(~purrr::has_element(names(.),"PH")) %>%
     purrr::keep(names(.) %in% c("USA","MEX",'BRA','ARG')) %>%
     purrr::map(., . %>%
           dplyr::mutate(Season = substr(as.character(Season), 1, 4)) %>%
@@ -70,7 +70,7 @@ get_extra_leagues <- function(URL, liigat){
                      home = Home, away = Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
     dplyr::bind_rows() %>%
     na.omit() %>%
-    dplyr::filter(!str_detect(league, 'Copa')) %>%
+    dplyr::filter(!stringr::str_detect(league, 'Copa')) %>%
     dplyr::group_by(league) %>%
     dplyr::filter(season == dplyr::last(season)) %>%
     dplyr::ungroup() %>%
@@ -89,8 +89,8 @@ get_extra_leagues <- function(URL, liigat){
     dplyr::select(mhxg = 1, maxg = 2) %>%
     dplyr::bind_cols(Mainleagues) %>%
     dplyr::select(league:PSCA, FHP:FAP, FTR:FTAG, mhxg, maxg) %>%
-    dplyr::mutate(across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
-    dplyr::mutate(across(c(home, away), ~tolower(.))) %>%
-    dplyr::mutate(across(c(home, away), ~str_remove_all(., "[[:punct:]]")))
+    dplyr::mutate(dplyr::across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~tolower(.))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]")))
 
 }

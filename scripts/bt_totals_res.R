@@ -1,32 +1,22 @@
 library(tidymodels)
 library(glmnet)
-library(implied)
 
-#kopioi workflowsetsistä totals interaktiot, esim ristin todari voi vaihdella aika paljon per liiga
-data <- bets::hist_buch_data
-
-data %>%
-  bind_cols(as_tibble(implied_probabilities(data %>% select(PSCH:PSCA), method = "wpo", normalize = TRUE)$probabilities) %>%
-              rename(FHP = PSCH, FDP = PSCD, FAP = PSCA)) %>%
-  ggstatsplot::ggbetweenstats(league, FDP)
+#totalsissa vois olla jarkeva olla league dummyt*side?
+bets::hist_totals_data %>%
+  mutate(total = FTHG+FTAG) %>%
+  select(league, total) %>%
+  ggstatsplot::ggbetweenstats(league, total)
 
 preds <- here::here('output') %>%
   fs::dir_ls() %>%
-  map_dfr(qs::qread) %>%
-  unnest(c(data)) %>%
-  arrange(date) %>%
-  filter(!is.na(p1))
+  keep(., stringr::str_detect(., 'total')) %>%
+  keep(., !stringr::str_detect(., '_arviot')) %>%
+  keep(., !stringr::str_detect(., '_bets')) %>%
+  tidytable::map_dfr(qs::qread) %>%
+  tidytable::unnest(c(data)) %>%
+  tidytable::arrange(date) %>%
+  tidytable::filter(!is.na(prob_under))
 preds
-
-rps_scores <- preds %>%
-  group_nest(wmkt, wxg, wgoals, xi) %>%
-  mutate(rps = map(data, ~goalmodel::score_predictions(predictions = matrix(c(.$p1, .$pd, .$p2), ncol = 3),
-                                                       observed = .$obs,
-                                                       score = 'rps')$rps)) %>%
-  select(-data) %>%
-  mutate(rps = map_dbl(rps, ~mean(., na.rm = TRUE))) %>%
-  arrange(rps)
-rps_scores
 
 game_ids <- preds %>%
   group_by(date, home, away) %>%
@@ -35,27 +25,24 @@ game_ids <- preds %>%
   mutate(game_id = row_number())
 
 problem_games <- game_ids %>%
-  filter(n > 1000)
+  filter(n != 750)
 
 oof_predictions <- preds %>%
-  left_join(game_ids) %>%
-  filter(!(game_id %in% problem_games$game_id)) %>%
-  mutate(across(c(wmkt:xi), ~round(., 5))) %>%
-  mutate(model_id = glue::glue('model_{xi}_{wmkt}')) %>%
-  select(game_id, model_id, league, FHP:FAP, p1:p2) %>%
-  pivot_longer(FHP:FAP, names_to = 'close', values_to = 'target') %>%
-  mutate(pred = case_when(close == 'FHP' ~ p1,
-                          close == 'FDP' ~ pd,
-                          TRUE ~ p2),
-         side = factor(case_when(close == 'FHP' ~ '1',
-                                 close == 'FDP' ~ 'X',
+  tidytable::left_join(game_ids) %>%
+  tidytable::filter(!(game_id %in% problem_games$game_id)) %>%
+  tidytable::mutate(tidytable::across(c(wmkt:xi), ~round(., 5))) %>%
+  tidytable::mutate(model_id = glue::glue('model_{xi}_{wmkt}')) %>%
+  tidytable::select(date, game_id, model_id, league, fo2.5:fu2.5, prob_under:prob_over) %>%
+  tidytable::pivot_longer(fo2.5:fu2.5, names_to = 'close', values_to = 'target') %>%
+  tidytable::mutate(pred = case_when(close == 'fo2.5' ~ prob_over,
+                          TRUE ~ prob_under),
+         side = factor(case_when(close == 'fo2.5' ~ '1',
                                  TRUE ~ '2'))) %>%
-  mutate(league = factor(league)) %>%
-  mutate(model_id = factor(model_id)) %>%
-  select(-close, -p1, -pd, -p2) %>%
-  pivot_wider(names_from = model_id, values_from = pred) %>%
-  select(-game_id)
-
+  tidytable::mutate(league = factor(league)) %>%
+  tidytable::mutate(model_id = factor(model_id)) %>%
+  tidytable::select(-close, -prob_under, -prob_over) %>%
+  tidytable::pivot_wider(names_from = model_id, values_from = pred) %>%
+  tidytable::select(-game_id)
 oof_predictions
 
 model_spec <-
@@ -112,16 +99,14 @@ meta_model <- tuned %>%
   parsnip::fit(data = oof_predictions) %>%
   butcher::butcher()
 
-lasso_coefs <- meta_model %>%
+totals_lasso_coefs <- meta_model %>%
   extract_fit_parsnip() %>%
   tidy() %>%
   filter(estimate != 0)
 
-use_data(lasso_coefs, overwrite = TRUE)
+use_data(totals_lasso_coefs, overwrite = TRUE)
 
-lasso_coefs
-
-selected_models <- lasso_coefs %>%
+selected_models <- totals_lasso_coefs %>%
   filter(term != '(Intercept)') %>%
   pull(term)
 
@@ -135,14 +120,15 @@ meta_model_preds %>%
   summarise(cor = cor(target, value)) %>%
   arrange(desc(cor))
 
-meta_model_preds %>%
-  select(target, .pred) %>%
-  ggstatsplot::ggscatterstats(x = .pred, y = target)
-
+# meta_model_preds %>%
+#   select(target, .pred) %>%
+#   ggstatsplot::ggscatterstats(x = .pred, y = target)
 
 #nain saa manuaalisesti tehtya!
-intercept <- pull(filter(lasso_coefs, term == '(Intercept)'), estimate)
-side_x <- pull(filter(lasso_coefs, term == 'side_X'), estimate)
+#pitaa paiivittaa interaktiot!
+intercept <- pull(filter(totals_lasso_coefs, term == '(Intercept)'), estimate)
+side_x <- pull(filter(totals_lasso_coefs, term == 'side_X2'), estimate)
+
 
 meta_model_preds %>%
   select(league, target, side, .pred, any_of(selected_models[-length(selected_models)])) %>%
@@ -151,21 +137,22 @@ meta_model_preds %>%
   left_join(totals_lasso_coefs %>% select(name = term, estimate)) %>%
   left_join(totals_lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
   mutate(int_coef = replace_na(int_coef, 0)) %>%
-  group_by(target, side, .pred) %>%
+  group_by(target, side, .pred, int_coef) %>%
   summarise(man_pred = sum(value*estimate)+intercept) %>%
-  mutate(man_pred = if_else(side == 'X', man_pred + side_x + int_coef, man_pred+ int_coef))
+  mutate(man_pred = if_else(side == '2', man_pred + side_x + int_coef, man_pred+int_coef))
 
 meta_model_preds %>%
   select(target, side, .pred, all_of(selected_models[-length(selected_models)])) %>%
   skimr::skim()
 
-bets::lasso_coefs
-
-lasso_models <- preds %>%
+totals_lasso_models <- preds %>%
   distinct(wmkt, wxg, wgoals, xi) %>%
   mutate(across(c(wmkt:xi), ~round(., 5))) %>%
   mutate(model_id = glue::glue('model_{xi}_{wmkt}')) %>%
-  filter(model_id %in% bets::lasso_coefs$term)
-use_data(lasso_models)
+  filter(model_id %in% totals_lasso_coefs$term)
+use_data(totals_lasso_models, overwrite = TRUE)
+
+
+
 
 

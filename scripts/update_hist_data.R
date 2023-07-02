@@ -1,5 +1,17 @@
 
 seasons <- seq(2018, 2023, 1)
+league_specs <-
+  tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
+         league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'),
+         fbref_cntry = c('ITA','POR','NED','ESP','ENG','ESP','FRA','GER','ENG','GER','MEX','USA','BRA','ARG'),
+         tier = c('1st','1st','1st','1st','1st','2nd','1st','1st','2nd','2nd','1st','1st','1st','1st'))
+
+fb_ref_grid <- expand_grid(seasons, league_specs)
+
+fbref_data <- pmap_dfr(list(pinnacle_odds$fbref_cntry, pinnacle_odds$tier, fb_ref_grid$seasons), get_fbref_data) %>%
+  arrange(date) %>%
+  filter(!is.na(hg))
+
 fbref_data <- get_fbref_data(seasons)
 use_data(fbref_data, overwrite = TRUE)
 
@@ -16,3 +28,7 @@ urls <- list(
 hist_buch_data <- get_historical_buchdata(urls)
 
 use_data(hist_buch_data, overwrite = TRUE)
+
+hist_totals_data <- get_historical_totals(urls)
+
+use_data(hist_totals_data, overwrite = TRUE)

@@ -16,7 +16,8 @@ Read_excel_files <- function(URL){
     purrr::keep(~purrr::has_element(names(.),"PSCH")) %>%
     purrr::keep(~purrr::has_element(names(.),"PSH"))
 
-  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = Div, date = Date, home = HomeTeam, away = AwayTeam, PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
+  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = Div, date = Date, home = HomeTeam, away = AwayTeam,
+                            PSCH, PSCD, PSCA, FTR, FTHG, FTAG) %>%
     dplyr::bind_rows() %>%
     na.omit()
 
@@ -40,7 +41,9 @@ Read_new_leagues <- function(URL){
     purrr::map(~dplyr::mutate(., Season = as.character(Season))) %>%
     purrr::map(~dplyr::mutate(., Season = substr(Season, 1, 4)))
 
-  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = League, date = Date, season = Season, home = Home, away = Away, PSCH = PH, PSCD = PD, PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
+  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = League, date = Date,
+                            season = Season, home = Home, away = Away, PSCH = PH, PSCD = PD,
+                            PSCA = PA, FTR = Res, FTHG = HG, FTAG = AG) %>%
     dplyr::bind_rows() %>%
     na.omit()
 
@@ -87,4 +90,51 @@ get_historical_buchdata <- function(urls){
     dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]")))
 }
 
+Read_totals <- function(URL){
+  if(str_detect(URL, "xlsx")){
+    temp = tempfile(fileext = ".xlsx")
+  } else {
+    temp = tempfile(fileext = ".xls")
+  }
+  download.file(URL, destfile=temp, mode='wb')
 
+  Mainleagues <- temp %>%
+    readxl::excel_sheets() %>%
+    purrr::set_names() %>%
+    purrr::map(readxl::read_excel, path = temp)
+
+  Mainleagues <- Mainleagues %>%
+    purrr::keep(~purrr::has_element(names(.),"PC<2.5"))
+
+  Mainleagues <- purrr::map(Mainleagues, dplyr::select, league = Div, date = Date, home = HomeTeam, away = AwayTeam,
+                            PSCH, PSCD, PSCA, FTR, FTHG, FTAG, o2.5 = `PC>2.5`, u2.5 = `PC<2.5`) %>%
+    dplyr::bind_rows() %>%
+    na.omit()
+
+}
+
+get_historical_totals <- function(URL){
+  All_leagues <- tibble::tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
+                                filename = urls)
+
+  All_leagues <- All_leagues %>%
+    dplyr::mutate(data = purrr::map(filename, Read_totals)) %>%
+    dplyr::select(-filename)
+
+  liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1")
+
+  All_leagues <- All_leagues %>%
+    tidyr::unnest(data) %>%
+    dplyr::filter(league %in% liigat)
+
+  All_leagues %>%
+    dplyr::filter(dplyr::case_when(
+      league %in% c("E1", "N1", "P1", 'Serie A') ~ season != "1819",
+      TRUE ~ season == season)) %>%
+    dplyr::mutate(date = lubridate::as_date(date)) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~tolower(.))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]")))
+
+
+}

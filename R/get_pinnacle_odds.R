@@ -16,13 +16,16 @@ get_pinnacle_odds <- function(liigat){
            moneyline.draw = leagues.events.periods.moneyline.draw,
            moneyline.away = leagues.events.periods.moneyline.away,
            periods.spreads = leagues.events.periods.spreads,
+           periods.totals = leagues.events.periods.totals,
            maxbet = leagues.events.periods.maxMoneyline) %>%
     dplyr::mutate(date = lubridate::as_date(lubridate::ymd_hms(date)))
 
   soccer_data <- Fixtures %>%
     dplyr::left_join(Odds, by = c("events.id")) %>%
     na.omit() %>%
-    dplyr::select(leagues.id, date, events.home, events.away, moneyline.home, moneyline.draw, moneyline.away, periods.spreads, maxbet)
+    dplyr::select(leagues.id, date, events.home, events.away,
+                  moneyline.home, moneyline.draw, moneyline.away,
+                  periods.spreads, periods.totals, maxbet)
 
   return(soccer_data)
 

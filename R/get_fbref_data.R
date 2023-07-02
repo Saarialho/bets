@@ -1,32 +1,27 @@
 #' get fbref data
 #'
-#' @param seasons a vector of yearst
+#' @param seasons a vector of years
+#' @param countries a vector of countries
+#' @param tiers a vector of tiers
 #' @return a tibble containing data.
 #' @export
-get_fbref_data <- function(seasons){
+get_fbref_data <- function(countries, tiers, seasons){
 
-  longer_leagues <- worldfootballR::fb_match_results(country = c("ENG", "ESP", "ITA", "GER", "FRA", 'USA'),
+  data <- worldfootballR::fb_match_results(country = countries,
                                                  gender = "M",
                                                  season_end_year = seasons,
-                                                 tier = c("1st"))
+                                                 tier = tiers)
 
-  short_seasons <- seasons[seasons > 2018]
+  rename_lookup <-
+    c(league = 'Competition_Name', season = 'Season_End_Year', date = 'Date', home = 'Home',
+      away = 'Away', hg = 'HomeGoals', ag = 'AwayGoals', h_xg = 'Home_xG', a_xg = 'Away_xG')
 
-  shorter_leagues <- worldfootballR::fb_match_results(country = c('NED', 'MEX', 'POR', 'BRA'),
-                                                 gender = "M",
-                                                 season_end_year = short_seasons,
-                                                 tier = c("1st"))
+  select_lookup <- c('league', 'season', 'date', 'home', 'away', 'hg', 'ag', 'h_xg', 'a_xg')
 
-
-  second_tier <- worldfootballR::fb_match_results(country = c("ENG"), gender = "M",
-                                                  season_end_year = short_seasons,
-                                                  tier = c("2nd"))
-  longer_leagues %>%
-    dplyr::bind_rows(shorter_leagues) %>%
-    dplyr::bind_rows(second_tier) %>%
+  data %>%
     tibble::as_tibble() %>%
-    dplyr::select(league = Competition_Name, season = Season_End_Year, date = Date,
-                  home = Home, away = Away, hg = HomeGoals, ag = AwayGoals, h_xg = Home_xG, a_xg = Away_xG) %>%
+    dplyr::rename(any_of(rename_lookup)) %>%
+    dplyr::select(any_of(select_lookup)) %>%
     dplyr::mutate(dplyr::across(c(home, away), ~stringi::stri_trans_general(., id = "Latin-ASCII"))) %>%
     dplyr::mutate(dplyr::across(c(home, away), ~tolower(.))) %>%
     dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]"))) %>%

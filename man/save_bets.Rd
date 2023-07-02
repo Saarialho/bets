@@ -4,12 +4,14 @@
 \alias{save_bets}
 \title{helper fun to save bets}
 \usage{
-save_bets(to_save, arviot = TRUE)
+save_bets(to_save, arviot = TRUE, totals = TRUE)
 }
 \arguments{
 \item{to_save}{data to ...}
 
 \item{arviot}{vai bets kumpi tallennetaan}
+
+\item{totals}{logical}
 }
 \description{
 helper fun to save bets

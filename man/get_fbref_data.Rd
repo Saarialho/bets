@@ -4,10 +4,14 @@
 \alias{get_fbref_data}
 \title{get fbref data}
 \usage{
-get_fbref_data(seasons)
+get_fbref_data(countries, tiers, seasons)
 }
 \arguments{
-\item{seasons}{a vector of yearst}
+\item{countries}{a vector of countries}
+
+\item{tiers}{a vector of tiers}
+
+\item{seasons}{a vector of years}
 }
 \value{
 a tibble containing data.
