@@ -6,11 +6,7 @@
 #' @export
 kelly_bet <- function(ev, kerroin, max_limit){
 
-  Tilinrahat <-
-    suppressMessages(
-    pinnacle.API::GetClientBalance()$availableBalance +
-      pinnacle.API::GetClientBalance()$outstandingTransactions
-    )
+  Tilinrahat <- 25000
 
   b = ((ev)/(kerroin-1))
   panos = b*Tilinrahat

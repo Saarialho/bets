@@ -75,7 +75,7 @@ get_historical_buchdata <- function(urls){
     dplyr::select(-filename)
 
   #tahan voisi lisata D2, SP2 ja I2?
-  liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1")
+  liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1", "D2", "SP2", "I2")
 
   All_leagues <- All_leagues %>%
     tidyr::unnest(data) %>%
