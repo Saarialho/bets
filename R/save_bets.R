@@ -27,6 +27,4 @@ save_bets <- function(to_save, arviot = TRUE, totals = TRUE){
 
 }
 
-path <- file.path("~/Documents/bets/output", 'totals_arviot.rds')
-old_data <- qs::qread(path)
 

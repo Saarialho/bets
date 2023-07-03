@@ -52,7 +52,7 @@ leagues %>%
 
 rm(data)
 
-weights <- t(replicate(1000, diff(c(0, sort(runif(2)), 1))) ) %>%
+weights <- t(replicate(750, diff(c(0, sort(runif(2)), 1))) ) %>%
   as_tibble() %>%
   select(wmkt = V1, wxg = V2, wgoals = V3) %>%
   rowwise() %>%

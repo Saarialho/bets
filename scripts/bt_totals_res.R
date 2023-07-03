@@ -1,11 +1,14 @@
 library(tidymodels)
 library(glmnet)
+library(implied)
 
 #totalsissa vois olla jarkeva olla league dummyt*side?
-bets::hist_totals_data %>%
-  mutate(total = FTHG+FTAG) %>%
-  select(league, total) %>%
-  ggstatsplot::ggbetweenstats(league, total)
+data <- bets::hist_totals_data
+
+data %>%
+  bind_cols(as_tibble(implied_probabilities(data %>% select(o2.5, u2.5), method = "wpo", normalize = TRUE)$probabilities) %>%
+              rename(p_over = o2.5, p_under = u2.5)) %>%
+  ggstatsplot::ggbetweenstats(league, p_under)
 
 preds <- here::here('output') %>%
   fs::dir_ls() %>%
@@ -79,8 +82,8 @@ options(tidymodels.dark = TRUE)
 tuned <-
   wfset %>%
   workflow_map(
-    resamples = rsample::bootstraps(oof_predictions, 50),
-    grid = 50,
+    resamples = rsample::bootstraps(oof_predictions, 80),
+    grid = 80,
     metrics = metric_set(rsq_trad),
     control = control_grid(save_pred = FALSE, save_workflow = TRUE)
   )
@@ -104,7 +107,8 @@ totals_lasso_coefs <- meta_model %>%
   tidy() %>%
   filter(estimate != 0)
 
-use_data(totals_lasso_coefs, overwrite = TRUE)
+totals_lasso_coefs %>%
+  qs::qsave(file.path("~/Documents/bets/output", 'totals_lasso_coefs.rds'))
 
 selected_models <- totals_lasso_coefs %>%
   filter(term != '(Intercept)') %>%
@@ -128,7 +132,7 @@ meta_model_preds %>%
 #pitaa paiivittaa interaktiot!
 intercept <- pull(filter(totals_lasso_coefs, term == '(Intercept)'), estimate)
 side_x <- pull(filter(totals_lasso_coefs, term == 'side_X2'), estimate)
-
+league_F1 <- pull(filter(totals_lasso_coefs, term == 'league_F1'), estimate)
 
 meta_model_preds %>%
   select(league, target, side, .pred, any_of(selected_models[-length(selected_models)])) %>%
@@ -137,20 +141,25 @@ meta_model_preds %>%
   left_join(totals_lasso_coefs %>% select(name = term, estimate)) %>%
   left_join(totals_lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
   mutate(int_coef = replace_na(int_coef, 0)) %>%
-  group_by(target, side, .pred, int_coef) %>%
+  group_by(league, target, side, .pred, int_coef) %>%
   summarise(man_pred = sum(value*estimate)+intercept) %>%
-  mutate(man_pred = if_else(side == '2', man_pred + side_x + int_coef, man_pred+int_coef))
-
-meta_model_preds %>%
-  select(target, side, .pred, all_of(selected_models[-length(selected_models)])) %>%
-  skimr::skim()
+  #interaktio termi
+  mutate(man_pred = man_pred + int_coef) %>%
+  #side korjaus
+  mutate(man_pred = if_else(side == '2', man_pred + side_x, man_pred)) %>%
+  #liiga korjaus
+  mutate(man_pred = if_else(league == 'F1', man_pred + league_F1, man_pred)) %>%
+  filter(abs(man_pred-.pred) > 0.0001)
 
 totals_lasso_models <- preds %>%
   distinct(wmkt, wxg, wgoals, xi) %>%
   mutate(across(c(wmkt:xi), ~round(., 5))) %>%
   mutate(model_id = glue::glue('model_{xi}_{wmkt}')) %>%
   filter(model_id %in% totals_lasso_coefs$term)
-use_data(totals_lasso_models, overwrite = TRUE)
+
+totals_lasso_models %>%
+  qs::qsave(file.path("~/Documents/bets/output", 'totals_lasso_models.rds'))
+
 
 
 

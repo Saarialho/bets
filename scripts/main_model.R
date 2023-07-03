@@ -8,8 +8,8 @@ configs <- bets::lasso_models %>%
   left_join(coefs, by = c('model_id' = 'term')) %>%
   arrange(desc(estimate))
 
-totals_coefs <- bets::totals_lasso_coefs
-totals_configs <- bets::totals_lasso_models %>%
+totals_coefs <- qs::qread(here::here('output', 'totals_lasso_coefs.rds'))
+totals_configs <- qs::qread(here::here('output', 'totals_lasso_models.rds')) %>%
   left_join(totals_coefs, by = c('model_id' = 'term')) %>%
   arrange(desc(estimate))
 

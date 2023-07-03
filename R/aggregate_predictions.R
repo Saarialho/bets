@@ -6,8 +6,12 @@
 aggregate_predictions <- function(preds, totals = FALSE){
 
   if(totals){
-    intercept <- dplyr::pull(dplyr::filter(bets::totals_lasso_coefs, term == '(Intercept)'), estimate)
-    side_x <- dplyr::pull(dplyr::filter(bets::totals_lasso_coefs, term == 'side_X2'), estimate)
+
+    coefs <- qs::qread(here::here('output', 'totals_lasso_coefs.rds'))
+
+    intercept <- dplyr::pull(dplyr::filter(coefs, term == '(Intercept)'), estimate)
+    side_x <- dplyr::pull(dplyr::filter(coefs, term == 'side_X2'), estimate)
+    league_F1 <- dplyr::pull(dplyr::filter(coefs, term == 'league_F1'), estimate)
 
     totals <- preds %>%
       dplyr::select(date, team1, team2, periods.totals) %>%
@@ -15,11 +19,24 @@ aggregate_predictions <- function(preds, totals = FALSE){
 
     arviot <- preds %>%
       dplyr::select(-teams, -mlh, -mld, -mla, -periods.totals) %>%
-      tidyr::pivot_longer(cols = prob_under:prob_over, names_to = 'side', values_to = 'pred') %>%
-      dplyr::left_join(bets::totals_lasso_coefs %>% dplyr::select(model_id  = term, estimate), by = 'model_id') %>%
+      tidyr::pivot_longer(cols = prob_under:prob_over, names_to = 'pred_side', values_to = 'pred') %>%
+      dplyr::mutate(side = dplyr::if_else(pred_side == 'prob_over', '1', '2')) %>%
+      dplyr::mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
+      dplyr::left_join(coefs %>% dplyr::select(model_id  = term, estimate), by = 'model_id') %>%
+      dplyr::left_join(coefs %>% dplyr::select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
+      dplyr::select(-side) %>%
+      dplyr::rename(side = pred_side) %>%
+      dplyr::mutate(int_coef = tidyr::replace_na(int_coef, 0)) %>%
       dplyr::summarise(pred = sum(pred*estimate)+intercept,
-                .by = c(date, league, team1, team2, maxbet, side)) %>%
-      dplyr::mutate(pred = if_else(side == 'prob_under', pred + side_x, pred)) %>%
+                .by = c(date, league, team1, team2, maxbet, int_coef, side)) %>%
+      #interaktio termi
+      dplyr::mutate(pred = pred + int_coef) %>%
+      dplyr::select(-int_coef) %>%
+      #side korjaus
+      dplyr::mutate(pred = dplyr::if_else(side == 'prob_under', pred + side_x, pred)) %>%
+      #liiga korjaus
+      dplyr::mutate(pred = dplyr::if_else(league == 'F1', pred + league_F1, pred)) %>%
+
       tidyr::pivot_wider(names_from = side, values_from = pred) %>%
       dplyr::left_join(totals) %>%
       tidyr::unnest(periods.totals) %>%
