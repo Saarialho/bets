@@ -54,9 +54,6 @@ fbref_leagues <- map2_dfr(pinnacle_odds$fbref_cntry, pinnacle_odds$tier, get_fbr
   arrange(date) %>%
   filter(!is.na(hg))
 
-fbref_leagues %>%
-  summarise(max_date = max(date), .by = league)
-
 main_data <- join_buch_fbref(buch_data = buch_leagues, fbref_data = fbref_leagues) %>%
   select(-contains('date_'), -c(PSCH:FTR)) %>%
   filter(league %in% active_leagues)
@@ -74,6 +71,12 @@ main_data %>%
   select(league, h_xg) %>%
   group_by(league) %>%
   skimr::skim()
+
+fbref_leagues %>%
+  summarise(max_date = max(date), .by = league)
+
+main_data %>%
+  summarise(max_date = max(date), .by = league)
 
 # muutetaan pinnacle nimet
 pin_names <- main_data %>%
