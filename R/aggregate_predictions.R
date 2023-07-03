@@ -7,11 +7,9 @@ aggregate_predictions <- function(preds, totals = FALSE){
 
   if(totals){
 
-    coefs <- qs::qread(here::here('output', 'totals_lasso_coefs.rds'))
+    lasso_coefs <- qs::qread(here::here('models', 'totals_lasso_coefs.rds'))
 
-    intercept <- dplyr::pull(dplyr::filter(coefs, term == '(Intercept)'), estimate)
-    side_x <- dplyr::pull(dplyr::filter(coefs, term == 'side_X2'), estimate)
-    league_F1 <- dplyr::pull(dplyr::filter(coefs, term == 'league_F1'), estimate)
+    intercept <- dplyr::pull(dplyr::filter(lasso_coefs, term == '(Intercept)'), estimate)
 
     totals <- preds %>%
       dplyr::select(date, team1, team2, periods.totals) %>%
@@ -22,21 +20,19 @@ aggregate_predictions <- function(preds, totals = FALSE){
       tidyr::pivot_longer(cols = prob_under:prob_over, names_to = 'pred_side', values_to = 'pred') %>%
       dplyr::mutate(side = dplyr::if_else(pred_side == 'prob_over', '1', '2')) %>%
       dplyr::mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
-      dplyr::left_join(coefs %>% dplyr::select(model_id  = term, estimate), by = 'model_id') %>%
-      dplyr::left_join(coefs %>% dplyr::select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
+      dplyr::mutate(league_dummy = glue::glue('league_{league}')) %>%
+      dplyr::mutate(side_dummy = glue::glue('side_X{side}')) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, estimate)) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, int_coef = estimate), by = c('league_interaction' = 'model_id')) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, dummy_coef = estimate), by = c('league_dummy' = 'model_id')) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, side_coef = estimate), by = c('side_dummy' = 'model_id')) %>%
+      dplyr::mutate(dplyr::across(contains('_coef'), ~replace_na(., 0))) %>%
       dplyr::select(-side) %>%
       dplyr::rename(side = pred_side) %>%
-      dplyr::mutate(int_coef = tidyr::replace_na(int_coef, 0)) %>%
       dplyr::summarise(pred = sum(pred*estimate)+intercept,
-                .by = c(date, league, team1, team2, maxbet, int_coef, side)) %>%
-      #interaktio termi
-      dplyr::mutate(pred = pred + int_coef) %>%
-      dplyr::select(-int_coef) %>%
-      #side korjaus
-      dplyr::mutate(pred = dplyr::if_else(side == 'prob_under', pred + side_x, pred)) %>%
-      #liiga korjaus
-      dplyr::mutate(pred = dplyr::if_else(league == 'F1', pred + league_F1, pred)) %>%
-
+                .by = c(date, league, team1, team2, maxbet, int_coef, dummy_coef, side_coef, side)) %>%
+      dplyr::mutate(pred = pred + int_coef + dummy_coef + side_coef) %>%
+      dplyr::select(-dplyr::ends_with('_coef')) %>%
       tidyr::pivot_wider(names_from = side, values_from = pred) %>%
       dplyr::left_join(totals) %>%
       tidyr::unnest(periods.totals) %>%
@@ -57,8 +53,10 @@ aggregate_predictions <- function(preds, totals = FALSE){
       dplyr::select(-dplyr::any_of('max'))
 
   } else {
-    intercept <- dplyr::pull(dplyr::filter(bets::lasso_coefs, term == '(Intercept)'), estimate)
-    side_x <- dplyr::pull(dplyr::filter(bets::lasso_coefs, term == 'side_X'), estimate)
+
+    lasso_coefs <- qs::qread(here::here('models', 'lasso_coefs.rds'))
+
+    intercept <- dplyr::pull(dplyr::filter(lasso_coefs, term == '(Intercept)'), estimate)
 
     spreads <- preds %>%
       dplyr::select(date, team1, team2, periods.spreads) %>%
@@ -66,11 +64,25 @@ aggregate_predictions <- function(preds, totals = FALSE){
 
     arviot <- preds %>%
       dplyr::select(-teams) %>%
-      tidyr::pivot_longer(cols = p1:p2, names_to = 'side', values_to = 'pred') %>%
-      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id  = term, estimate), by = 'model_id') %>%
-      summarise(pred = sum(pred*estimate)+intercept,
-                .by = c(date, league, team1, team2, mlh, mld, mla, maxbet, side)) %>%
-      dplyr::mutate(pred = if_else(side == 'pd', pred + side_x, pred)) %>%
+      tidyr::pivot_longer(cols = p1:p2, names_to = 'pred_side', values_to = 'pred') %>%
+      dplyr::mutate(side = dplyr::case_when(pred_side == 'p1' ~ '1',
+                                     pred_side == 'pd' ~ 'X',
+                                     TRUE ~ '2')) %>%
+      dplyr::mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
+      dplyr::mutate(league_dummy = glue::glue('league_{league}')) %>%
+      #tahan ei tuu X
+      dplyr::mutate(side_dummy = glue::glue('side_{side}')) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, estimate)) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, int_coef = estimate), by = c('league_interaction' = 'model_id')) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, dummy_coef = estimate), by = c('league_dummy' = 'model_id')) %>%
+      dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, side_coef = estimate), by = c('side_dummy' = 'model_id')) %>%
+      dplyr::mutate(dplyr::across(contains('_coef'), ~replace_na(., 0))) %>%
+      dplyr::select(-side) %>%
+      dplyr::rename(side = pred_side) %>%
+      dplyr::summarise(pred = sum(pred*estimate)+intercept,
+                .by = c(date, league, team1, team2, mlh, mld, mla, maxbet, side, int_coef, dummy_coef, side_coef)) %>%
+      dplyr::mutate(pred = pred + int_coef + dummy_coef + side_coef) %>%
+      dplyr::select(-dplyr::ends_with('_coef')) %>%
       tidyr::pivot_wider(names_from = side, values_from = pred) %>%
       dplyr::left_join(spreads) %>%
       tidyr::unnest(periods.spreads) %>%

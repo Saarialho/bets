@@ -3,13 +3,13 @@ pacman::p_load(bets, tidyverse)
 log_in_pinnacle()
 
 # mallien paramterit ----
-coefs <- bets::lasso_coefs
-configs <- bets::lasso_models %>%
+coefs <- qs::qread(here::here('models', 'lasso_coefs.rds'))
+configs <- qs::qread(here::here('models', 'lasso_models.rds')) %>%
   left_join(coefs, by = c('model_id' = 'term')) %>%
   arrange(desc(estimate))
 
-totals_coefs <- qs::qread(here::here('output', 'totals_lasso_coefs.rds'))
-totals_configs <- qs::qread(here::here('output', 'totals_lasso_models.rds')) %>%
+totals_coefs <- qs::qread(here::here('models', 'totals_lasso_coefs.rds'))
+totals_configs <- qs::qread(here::here('models', 'totals_lasso_models.rds')) %>%
   left_join(totals_coefs, by = c('model_id' = 'term')) %>%
   arrange(desc(estimate))
 

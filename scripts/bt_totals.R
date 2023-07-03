@@ -1,4 +1,4 @@
-pacman::p_load(bets, tidytable, pushoverr, tibble, stringr, implied, goalmodel)
+pacman::p_load(bets, tidyverse, implied, goalmodel)
 
 data <- bets::join_buch_fbref(bets::hist_totals_data, bets::fbref_data)
 
@@ -44,7 +44,7 @@ leagues <- data %>%
   select(-contains('date_')) %>%
   mutate(h_xg = if_else(is.na(h_xg), FTHG, h_xg),
          a_xg = if_else(is.na(a_xg), FTAG, a_xg)) %>%
-  nest_by(league, season)
+  group_nest(league, season)
 
 leagues %>%
   unnest(data) %>%
@@ -52,7 +52,7 @@ leagues %>%
 
 rm(data)
 
-weights <- t(replicate(750, diff(c(0, sort(runif(2)), 1))) ) %>%
+weights <- t(replicate(1000, diff(c(0, sort(runif(2)), 1))) ) %>%
   as_tibble() %>%
   select(wmkt = V1, wxg = V2, wgoals = V3) %>%
   rowwise() %>%
@@ -60,7 +60,20 @@ weights <- t(replicate(750, diff(c(0, sort(runif(2)), 1))) ) %>%
   ungroup()
 weights
 
-for(row in seq_len(nrow(leagues))){
+library(foreach)
+library(doParallel)
+# Register parallel backend
+cl <- makeCluster(8)
+registerDoParallel(cl)
+clusterEvalQ(cl, {
+  library(tidyverse)
+  library(goalmodel)
+  library(bets)
+  library(rsample)
+})
+
+
+foreach(row = seq_len(nrow(leagues))) %dopar% {
   tryCatch(
     {
 
@@ -95,8 +108,8 @@ for(row in seq_len(nrow(leagues))){
             unnest(c(data)) %>%
             mutate(hwxg = wmkt*mhxg + wxg*h_xg + wgoals*FTHG,
                    awxg = wmkt*maxg + wxg*a_xg + wgoals*FTAG) %>%
-            nest_by(wmkt, wxg, wgoals, xi) %>%
-            mutate(fit = map2(data, xi, fit_multimixture_model)) %>%
+            group_nest(wmkt, wxg, wgoals, xi) %>%
+            mutate(fit = map2(data, xi, bets::fit_multimixture_model)) %>%
             select(-data) %>%
             mutate(test = list(test)) %>%
             mutate(pred = map2(fit, test,
@@ -108,7 +121,7 @@ for(row in seq_len(nrow(leagues))){
         preds <- fit_and_pred %>%
           select(-fit) %>%
           unnest(c(test, pred)) %>%
-          nest_by(wmkt, wxg, wgoals, xi)
+          group_nest(wmkt, wxg, wgoals, xi)
 
         predictions <- predictions %>% bind_rows(preds)
       }
@@ -119,4 +132,5 @@ for(row in seq_len(nrow(leagues))){
     error=function(error_message) {message(error_message)}
   )
 }
-
+# Stop the cluster
+stopCluster(cl)
