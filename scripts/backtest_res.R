@@ -35,7 +35,7 @@ game_ids <- preds %>%
   mutate(game_id = row_number())
 
 problem_games <- game_ids %>%
-  filter(n > 1000)
+  filter(n != 1000)
 
 oof_predictions <- preds %>%
   left_join(game_ids) %>%
@@ -65,7 +65,6 @@ model_spec <-
 model_rec <- recipe(oof_predictions %>% dplyr::slice(0)) %>%
   update_role(everything()) %>%
   update_role(target, new_role = "outcome") %>%
-  update_role(date, new_role = "date") %>%
   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_numeric_predictors())
@@ -74,7 +73,6 @@ interact_rec <-
   recipe(oof_predictions %>% dplyr::slice(0)) %>%
   update_role(everything()) %>%
   update_role(target, new_role = "outcome") %>%
-  update_role(date, new_role = "date") %>%
   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
   step_interact(terms = ~ side:league) %>%
   step_dummy(all_nominal_predictors()) %>%
@@ -92,8 +90,8 @@ options(tidymodels.dark = TRUE)
 tuned <-
   wfset %>%
   workflow_map(
-    resamples = rsample::bootstraps(oof_predictions, 50),
-    grid = 50,
+    resamples = rsample::bootstraps(oof_predictions, 80),
+    grid = 80,
     metrics = metric_set(rsq_trad),
     control = control_grid(save_pred = FALSE, save_workflow = TRUE)
   )
@@ -117,7 +115,8 @@ lasso_coefs <- meta_model %>%
   tidy() %>%
   filter(estimate != 0)
 
-use_data(lasso_coefs, overwrite = TRUE)
+lasso_coefs %>%
+  qs::qsave(here::here('models', 'lasso_coefs.rds'))
 
 lasso_coefs
 
@@ -142,30 +141,34 @@ meta_model_preds %>%
 
 #nain saa manuaalisesti tehtya!
 intercept <- pull(filter(lasso_coefs, term == '(Intercept)'), estimate)
-side_x <- pull(filter(lasso_coefs, term == 'side_X'), estimate)
 
 meta_model_preds %>%
   select(league, target, side, .pred, any_of(selected_models[-length(selected_models)])) %>%
   pivot_longer(contains('model')) %>%
   mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
-  left_join(totals_lasso_coefs %>% select(name = term, estimate)) %>%
-  left_join(totals_lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
-  mutate(int_coef = replace_na(int_coef, 0)) %>%
-  group_by(target, side, .pred) %>%
+  mutate(league_dummy = glue::glue('league_{league}')) %>%
+  mutate(side_dummy = glue::glue('side_{side}')) %>%
+  left_join(lasso_coefs %>% select(name = term, estimate)) %>%
+  left_join(lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
+  left_join(lasso_coefs %>% select(name = term, dummy_coef = estimate), by = c('league_dummy' = 'name')) %>%
+  left_join(lasso_coefs %>% select(name = term, side_coef = estimate), by = c('side_dummy' = 'name')) %>%
+  mutate(across(contains('_coef'), ~replace_na(., 0))) %>%
+  group_by(target, side, .pred, int_coef, dummy_coef, side_coef) %>%
   summarise(man_pred = sum(value*estimate)+intercept) %>%
-  mutate(man_pred = if_else(side == 'X', man_pred + side_x + int_coef, man_pred+ int_coef))
+  mutate(man_pred = man_pred + int_coef + dummy_coef + side_coef) %>%
+  filter(abs(man_pred-.pred) > 0.0001)
 
 meta_model_preds %>%
-  select(target, side, .pred, all_of(selected_models[-length(selected_models)])) %>%
+  select(target, side, .pred, any_of(selected_models[-length(selected_models)])) %>%
   skimr::skim()
-
-bets::lasso_coefs
 
 lasso_models <- preds %>%
   distinct(wmkt, wxg, wgoals, xi) %>%
   mutate(across(c(wmkt:xi), ~round(., 5))) %>%
   mutate(model_id = glue::glue('model_{xi}_{wmkt}')) %>%
-  filter(model_id %in% bets::lasso_coefs$term)
-use_data(lasso_models)
+  filter(model_id %in% lasso_coefs$term)
+
+lasso_models %>%
+  qs::qsave(here::here('models', 'lasso_models.rds'))
 
 

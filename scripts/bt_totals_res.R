@@ -108,7 +108,7 @@ totals_lasso_coefs <- meta_model %>%
   filter(estimate != 0)
 
 totals_lasso_coefs %>%
-  qs::qsave(file.path("~/Documents/bets/output", 'totals_lasso_coefs.rds'))
+  qs::qsave(here::here('models', 'totals_lasso_coefs.rds'))
 
 selected_models <- totals_lasso_coefs %>%
   filter(term != '(Intercept)') %>%
@@ -131,24 +131,21 @@ meta_model_preds %>%
 #nain saa manuaalisesti tehtya!
 #pitaa paiivittaa interaktiot!
 intercept <- pull(filter(totals_lasso_coefs, term == '(Intercept)'), estimate)
-side_x <- pull(filter(totals_lasso_coefs, term == 'side_X2'), estimate)
-league_F1 <- pull(filter(totals_lasso_coefs, term == 'league_F1'), estimate)
 
 meta_model_preds %>%
   select(league, target, side, .pred, any_of(selected_models[-length(selected_models)])) %>%
   pivot_longer(contains('model')) %>%
   mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
-  left_join(totals_lasso_coefs %>% select(name = term, estimate)) %>%
-  left_join(totals_lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
-  mutate(int_coef = replace_na(int_coef, 0)) %>%
-  group_by(league, target, side, .pred, int_coef) %>%
+  mutate(league_dummy = glue::glue('league_{league}')) %>%
+  mutate(side_dummy = glue::glue('side_{side}')) %>%
+  left_join(lasso_coefs %>% select(name = term, estimate)) %>%
+  left_join(lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
+  left_join(lasso_coefs %>% select(name = term, dummy_coef = estimate), by = c('league_dummy' = 'name')) %>%
+  left_join(lasso_coefs %>% select(name = term, side_coef = estimate), by = c('side_dummy' = 'name')) %>%
+  mutate(across(contains('_coef'), ~replace_na(., 0))) %>%
+  group_by(target, side, .pred, int_coef, dummy_coef, side_coef) %>%
   summarise(man_pred = sum(value*estimate)+intercept) %>%
-  #interaktio termi
-  mutate(man_pred = man_pred + int_coef) %>%
-  #side korjaus
-  mutate(man_pred = if_else(side == '2', man_pred + side_x, man_pred)) %>%
-  #liiga korjaus
-  mutate(man_pred = if_else(league == 'F1', man_pred + league_F1, man_pred)) %>%
+  mutate(man_pred = man_pred + int_coef + dummy_coef + side_coef) %>%
   filter(abs(man_pred-.pred) > 0.0001)
 
 totals_lasso_models <- preds %>%
@@ -158,7 +155,7 @@ totals_lasso_models <- preds %>%
   filter(model_id %in% totals_lasso_coefs$term)
 
 totals_lasso_models %>%
-  qs::qsave(file.path("~/Documents/bets/output", 'totals_lasso_models.rds'))
+  qs::qsave(here::here('models', 'totals_lasso_models.rds'))
 
 
 
