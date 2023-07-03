@@ -12,21 +12,22 @@ data %>%
 
 preds <- here::here('output') %>%
   fs::dir_ls() %>%
+  keep(., !stringr::str_detect(., 'total')) %>%
   map_dfr(qs::qread) %>%
   unnest(c(data)) %>%
   arrange(date) %>%
   filter(!is.na(p1))
 preds
 
-rps_scores <- preds %>%
-  group_nest(wmkt, wxg, wgoals, xi) %>%
-  mutate(rps = map(data, ~goalmodel::score_predictions(predictions = matrix(c(.$p1, .$pd, .$p2), ncol = 3),
-                                                       observed = .$obs,
-                                                       score = 'rps')$rps)) %>%
-  select(-data) %>%
-  mutate(rps = map_dbl(rps, ~mean(., na.rm = TRUE))) %>%
-  arrange(rps)
-rps_scores
+# rps_scores <- preds %>%
+#   group_nest(wmkt, wxg, wgoals, xi) %>%
+#   mutate(rps = map(data, ~goalmodel::score_predictions(predictions = matrix(c(.$p1, .$pd, .$p2), ncol = 3),
+#                                                        observed = .$obs,
+#                                                        score = 'rps')$rps)) %>%
+#   select(-data) %>%
+#   mutate(rps = map_dbl(rps, ~mean(., na.rm = TRUE))) %>%
+#   arrange(rps)
+# rps_scores
 
 game_ids <- preds %>%
   group_by(date, home, away) %>%
@@ -147,13 +148,14 @@ meta_model_preds %>%
   pivot_longer(contains('model')) %>%
   mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
   mutate(league_dummy = glue::glue('league_{league}')) %>%
+  mutate(league_dummy = if_else(league == 'Serie A', 'league_Serie.A', league_dummy)) %>%
   mutate(side_dummy = glue::glue('side_{side}')) %>%
   left_join(lasso_coefs %>% select(name = term, estimate)) %>%
   left_join(lasso_coefs %>% select(name = term, int_coef = estimate), by = c('league_interaction' = 'name')) %>%
   left_join(lasso_coefs %>% select(name = term, dummy_coef = estimate), by = c('league_dummy' = 'name')) %>%
   left_join(lasso_coefs %>% select(name = term, side_coef = estimate), by = c('side_dummy' = 'name')) %>%
   mutate(across(contains('_coef'), ~replace_na(., 0))) %>%
-  group_by(target, side, .pred, int_coef, dummy_coef, side_coef) %>%
+  group_by(league, target, side, .pred, int_coef, dummy_coef, side_coef) %>%
   summarise(man_pred = sum(value*estimate)+intercept) %>%
   mutate(man_pred = man_pred + int_coef + dummy_coef + side_coef) %>%
   filter(abs(man_pred-.pred) > 0.0001)

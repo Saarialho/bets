@@ -21,6 +21,7 @@ aggregate_predictions <- function(preds, totals = FALSE){
       dplyr::mutate(side = dplyr::if_else(pred_side == 'prob_over', '1', '2')) %>%
       dplyr::mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
       dplyr::mutate(league_dummy = glue::glue('league_{league}')) %>%
+      dplyr::mutate(league_dummy = dplyr::if_else(league == 'Serie A', 'league_Serie.A', league_dummy)) %>%
       dplyr::mutate(side_dummy = glue::glue('side_X{side}')) %>%
       dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, estimate)) %>%
       dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, int_coef = estimate), by = c('league_interaction' = 'model_id')) %>%
@@ -70,6 +71,7 @@ aggregate_predictions <- function(preds, totals = FALSE){
                                      TRUE ~ '2')) %>%
       dplyr::mutate(league_interaction = glue::glue('side{side}_x_league{league}')) %>%
       dplyr::mutate(league_dummy = glue::glue('league_{league}')) %>%
+      dplyr::mutate(league_dummy = dplyr::if_else(league == 'Serie A', 'league_Serie.A', league_dummy)) %>%
       #tahan ei tuu X
       dplyr::mutate(side_dummy = glue::glue('side_{side}')) %>%
       dplyr::left_join(lasso_coefs %>% dplyr::select(model_id = term, estimate)) %>%

@@ -1,4 +1,8 @@
 library(bets)
+library(tidyverse)
+library(implied)
+library(goalmodel)
+
 data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
 
 data %>% skimr::skim()
@@ -57,7 +61,7 @@ weights
 library(foreach)
 library(doParallel)
 # Register parallel backend
-cl <- makeCluster(8)
+cl <- makeCluster(10)
 registerDoParallel(cl)
 clusterEvalQ(cl, {
   library(tidyverse)
