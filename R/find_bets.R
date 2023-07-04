@@ -9,14 +9,14 @@ find_bets <- function(arviot, totals = TRUE){
     hist_bets <- qs::qread("~/Documents/bets/output/totals_bets.rds")
 
     betit <- arviot %>%
-      dplyr::filter(EV > 0.05, dts >= 2)
+      dplyr::filter(EV > 0.06, dts >= 2)
 
   } else{
 
     hist_bets <- qs::qread("~/Documents/bets/output/multimodel_bets.rds")
 
     betit <- arviot %>%
-      dplyr::filter(EV > 0.05, dts >= 2)
+      dplyr::filter(EV > 0.06, dts >= 2)
 
   }
 

@@ -134,7 +134,7 @@ pwalk(list(data_to_save$value, data_to_save$arviot_lgl, data_to_save$totals), sa
 betit <- data_to_save %>%
   filter(!arviot_lgl)
 
-betit$value %>% map(send_notification)
+map2(betit$value, betit$totals, send_notification)
 
 #tama myohemmin!
 # if(arviot %>% filter(is.na(p1)) %>% nrow > 0){
