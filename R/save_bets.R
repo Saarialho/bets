@@ -20,7 +20,7 @@ save_bets <- function(to_save, arviot = TRUE, totals = TRUE){
   updated <- old_data %>%
     dplyr::mutate(kohde = as.numeric(kohde)) %>%
     dplyr::bind_rows(to_save %>%
-                       dplyr::filter(!(id %in% old_data$id), dts > 1) %>%
+                       dplyr::filter(!(id %in% old_data$id), dts >= 1) %>%
                        dplyr::mutate(kohde = as.numeric(kohde)))
 
   updated %>% qs::qsave(path)

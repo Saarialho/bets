@@ -4,7 +4,7 @@
 \alias{send_notification}
 \title{helper fun to send bets}
 \usage{
-send_notification(betit)
+send_notification(betit, totals = FALSE)
 }
 \arguments{
 \item{betit}{betit}

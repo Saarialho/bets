@@ -37,7 +37,7 @@ Read_new_leagues <- function(URL){
 
   Mainleagues <- Mainleagues %>%
     purrr::keep(~purrr::has_element(names(.),"PH")) %>%
-    purrr::keep(names(.) %in% c("USA","MEX",'BRA')) %>%
+    purrr::keep(names(.) %in% c("USA","MEX",'BRA', 'ARG')) %>%
     purrr::map(~dplyr::mutate(., Season = as.character(Season))) %>%
     purrr::map(~dplyr::mutate(., Season = substr(Season, 1, 4)))
 
@@ -55,7 +55,7 @@ Read_new_leagues <- function(URL){
 #' @export
 get_historical_buchdata <- function(urls){
   new_leagues <- Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx') %>%
-    dplyr::filter(stringr::str_detect(league, 'MLS|Liga MX|Serie')) %>%
+    dplyr::filter(stringr::str_detect(league, 'MLS|Liga MX|Serie|Liga Profe')) %>%
     dplyr::mutate(date = lubridate::as_date(date)) %>%
     dplyr::filter(season >= 2018) %>%
     dplyr::mutate(season = dplyr::case_when(season == '2018' ~ '1819',
