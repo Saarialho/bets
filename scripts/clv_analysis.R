@@ -6,9 +6,9 @@ urls <- list(
   "https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
   "https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
   "https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx"
+  "https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx",
+  "https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx"
 )
-
 hist_buch_data <- get_historical_buchdata(urls)
 
 hist_bets <- qs::qread(file.path("~/Documents/bets/output", "multimodel_bets.rds")) %>%
@@ -133,14 +133,100 @@ hist_arviot <- hist_arviot %>%
          maxbet = log(maxbet),
          kohde = factor(kohde))
 
-hist_arviot
+hist_arviot <- hist_arviot %>%
+  mutate(clv = datawizard::winsorize(clv, threshold = 0.02),
+         EV = datawizard::winsorize(EV, threshold = 0.02))
 
-clv_reg <- lm(clv ~ EV + kerroin + league + kohde, data = hist_arviot)
+clv_reg <- lm(clv ~ EV, data = hist_arviot)
 clv_reg %>% summary()
 qs::qsave(clv_reg, file = here::here('output', 'clv_reg.rds'))
 
-hist_arviot
+hist_arviot %>%
   #ggstatsplot::grouped_ggscatterstats(x = ev, y = clv, grouping.var = name) %>%
   ggstatsplot::ggscatterstats(x = EV, y = clv)
 
 
+hist_arviot %>%
+  select(EV, clv) %>%
+  mutate(ev_bin = ntile(EV, 15)) %>%
+  summarise(EV = mean(EV),
+            clv = mean(clv),
+            .by = ev_bin) %>%
+  ggstatsplot::ggscatterstats(x = EV, y = clv)
+
+
+library(tidymodels)
+
+train_data <- hist_arviot %>%
+  select(league, kohde, kerroin, EV, clv)
+
+model_spec <-
+  linear_reg(penalty = tune::tune(), mixture = 1) %>%
+  set_engine("glmnet", lower.limits = 0, lambda.min.ratio = 0)
+
+model_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
+  update_role(everything()) %>%
+  update_role(clv, new_role = "outcome") %>%
+  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+discrete_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
+  update_role(everything()) %>%
+  update_role(clv, new_role = "outcome") %>%
+  step_discretize(EV, num_breaks = 9) %>%
+  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+interact_rec <-
+  recipe(train_data %>% dplyr::slice(0)) %>%
+  update_role(everything()) %>%
+  update_role(clv, new_role = "outcome") %>%
+  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+  step_interact(terms = ~ kohde:league) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+wfset <-
+  workflow_set(
+    preproc = list(norm = model_rec, interact = interact_rec, discrete = discrete_rec),
+    models = list(lasso = model_spec)
+  )
+wfset
+
+options(tidymodels.dark = TRUE)
+
+tuned <-
+  wfset %>%
+  workflow_map(
+    resamples = rsample::bootstraps(train_data, 20),
+    grid = 20,
+    metrics = metric_set(rsq_trad),
+    control = control_grid(save_pred = FALSE, save_workflow = TRUE)
+  )
+
+tuned %>%
+  rank_results()
+
+
+
+
+
+
+data(biomass, package = "modeldata")
+
+biomass_tr <- biomass[biomass$dataset == "Training", ]
+biomass_te <- biomass[biomass$dataset == "Testing", ]
+
+rec <- recipe(
+  HHV ~ carbon + hydrogen + oxygen + nitrogen + sulfur,
+  data = biomass_tr
+) %>%
+  step_discretize(carbon, hydrogen)
+
+rec <- prep(rec, biomass_tr)
+#> Warning: Note that the options `prefix` and `labels` will be applied to all variables
+binned_te <- bake(rec, biomass_te)
+
+binned_te

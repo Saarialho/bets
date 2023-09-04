@@ -15,6 +15,7 @@ totals_configs <- qs::qread(here::here('models', 'totals_lasso_models.rds')) %>%
 
 # liigojen haut ----
 
+#D2 ja SP2 ei loydy xgta, pois?
 league_specs <-
   tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
          league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'),
@@ -26,7 +27,7 @@ pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
   group_nest(league.id, .key = 'pelit') %>%
   left_join(league_specs)
 
-main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx',
+main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
                                        pinnacle_odds$league)
 new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
                                        pinnacle_odds$league)
@@ -50,13 +51,56 @@ latest_comps <- vroom::vroom(
   filter(str_detect(competition_type, '1st|2nd')) %>%
   filter(season_end_year == max(season_end_year), .by = c(competition_type, competition_name))
 
-fbref_leagues <- map2_dfr(pinnacle_odds$fbref_cntry, pinnacle_odds$tier, get_fbref_data, seasons = 2023) %>%
+fbref_map <- tibble(fbref_country = pinnacle_odds$fbref_cntry,
+                    tier = pinnacle_odds$tier) %>%
+  mutate(season = if_else(fbref_country %in% c('BRA', 'USA'), #MEX jostain syysta sama kuin main leagues
+                          max(latest_comps$season_end_year)-1,
+                          max(latest_comps$season_end_year)))
+
+fbref_leagues <- pmap_dfr(
+  list(fbref_map$fbref_country, fbref_map$tier, fbref_map$season),
+  get_fbref_data) %>%
   arrange(date) %>%
   filter(!is.na(hg))
 
+fbref_leagues %>%
+  select(league, h_xg) %>%
+  group_by(league) %>% skimr::skim()
+
 main_data <- join_buch_fbref(buch_data = buch_leagues, fbref_data = fbref_leagues) %>%
   select(-contains('date_'), -c(PSCH:FTR)) %>%
-  filter(league %in% active_leagues)
+  filter(league %in% active_leagues) %>%
+  filter(league %in% pinnacle_odds$league)
+
+#naille ei saatu joinattua fbref dataa, nama on buch nimia
+unmatched_buch <- main_data %>%
+  filter(is.na(h_xg)) %>%
+  filter(!(league %in% c('D2', 'SP2'))) %>%
+  select(league, home, away) %>%
+  pivot_longer(-league, values_to = 'buch_name') %>%
+  distinct(buch_name, .keep_all = TRUE) %>%
+  arrange(buch_name) %>%
+  select(league, buch_name)
+
+target_names <- fbref_leagues %>%
+  select(league, home, away) %>%
+  pivot_longer(-league) %>%
+  distinct(value, .keep_all = TRUE) %>%
+  arrange(value) %>%
+  pull(value)
+
+unmatched_names <- unmatched_buch %>%
+  mutate(closest_fbref = map_chr(buch_name, function(x) {
+    teams <- target_names
+    distances <- adist(x, teams)
+    teams[which.min(distances)]
+  }), .by = league) %>%
+  filter(buch_name != closest_fbref)
+unmatched_names
+
+main_data %>%
+  filter(home %in% unmatched_names$buch_name | away %in% unmatched_names$buch_name) %>%
+  filter(is.na(h_xg))
 
 main_data %>%
   select(league, h_xg) %>%
@@ -84,14 +128,14 @@ pin_names <- main_data %>%
 
 models <- tibble(totals = c(FALSE, TRUE),
        configs = list(configs, totals_configs)) %>%
-  mutate(fits = map(configs, fit_models, pin_data = pin_names),
+  mutate(fits = map(configs, fit_models, pin_data = pin_names, min_games = 60),
          preds = map2(fits, totals, ~pred_with_fits(.x, .y, pin_odds = pinnacle_odds)))
 
 problems <- models %>%
+  filter(totals == FALSE) %>%
   select(preds) %>%
-  slice(2) %>%
   unnest(preds) %>%
-  filter(is.na(prob_under))
+  filter(is.na(pd))
 
 if(nrow(problems) > 0){
   team_names_map <- problems %>%
@@ -109,6 +153,7 @@ if(nrow(problems) > 0){
     select(-correct) %>%
     group_nest(league, pin_teams) %>%
     arrange(league, pin_teams) %>%
+    na.omit() %>%
     mutate(closest_match = map_chr(pin_teams, function(x) {
       teams <- data[[1]]$teams
       distances <- adist(x, teams)
@@ -134,18 +179,11 @@ pwalk(list(data_to_save$value, data_to_save$arviot_lgl, data_to_save$totals), sa
 betit <- data_to_save %>%
   filter(!arviot_lgl)
 
-map2(betit$value, betit$totals, send_notification)
+betit %>%
+  filter(totals == FALSE) %>%
+  unnest(value) %>%
+  select(team1:mla, EV1:EV2, hdp:away, kerroin, kohde, clv_pred, bet) %>%
+  arrange(desc(clv_pred))
 
-#tama myohemmin!
-# if(arviot %>% filter(is.na(p1)) %>% nrow > 0){
-#   message('ongelmia nimissä')
-#   arviot <- arviot %>%
-#     filter(!is.na(p1)) %>%
-#     modelr::add_predictions(., qs::qread(file.path(data_path, 'clv_stack.rds')), var = 'pred') %>%
-#     unnest(pred)
-# } else {
-#   arviot <- arviot %>%
-#     modelr::add_predictions(., qs::qread(file.path(data_path, 'clv_stack.rds')), var = 'pred') %>%
-#     unnest(pred)
-# }
+map2(betit$value, betit$totals, send_notification)
 

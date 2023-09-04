@@ -15,6 +15,7 @@ aggregate_predictions <- function(preds, totals = FALSE){
       dplyr::select(date, team1, team2, periods.totals) %>%
       dplyr::distinct(date, team1, team2, .keep_all = TRUE)
 
+    #Arviot ei summaa tasan 100 koska erikois liigat ei ole mukana BT, otetaanko kokonaan pois?
     arviot <- preds %>%
       dplyr::select(-teams, -mlh, -mld, -mla, -periods.totals) %>%
       tidyr::pivot_longer(cols = prob_under:prob_over, names_to = 'pred_side', values_to = 'pred') %>%
@@ -62,7 +63,7 @@ aggregate_predictions <- function(preds, totals = FALSE){
     spreads <- preds %>%
       dplyr::select(date, team1, team2, periods.spreads) %>%
       dplyr::distinct(date, team1, team2, .keep_all = TRUE)
-
+    #ei summaa arg liigan osalta 100 koska se ei ole mukana BT. Pitaa tehda BT sen kanssa.
     arviot <- preds %>%
       dplyr::select(-teams) %>%
       tidyr::pivot_longer(cols = p1:p2, names_to = 'pred_side', values_to = 'pred') %>%
@@ -81,9 +82,9 @@ aggregate_predictions <- function(preds, totals = FALSE){
       dplyr::mutate(dplyr::across(contains('_coef'), ~replace_na(., 0))) %>%
       dplyr::select(-side) %>%
       dplyr::rename(side = pred_side) %>%
-      dplyr::summarise(pred = sum(pred*estimate)+intercept,
+      dplyr::summarise(pred = sum(pred*estimate),
                 .by = c(date, league, team1, team2, mlh, mld, mla, maxbet, side, int_coef, dummy_coef, side_coef)) %>%
-      dplyr::mutate(pred = pred + int_coef + dummy_coef + side_coef) %>%
+      dplyr::mutate(pred = pred + intercept+ int_coef + dummy_coef + side_coef) %>%
       dplyr::select(-dplyr::ends_with('_coef')) %>%
       tidyr::pivot_wider(names_from = side, values_from = pred) %>%
       dplyr::left_join(spreads) %>%

@@ -67,7 +67,7 @@ get_historical_buchdata <- function(urls){
                               season == '2024' ~ '2425',
                               season == '2025' ~ '2526'))
 
-  All_leagues <- tibble::tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
+  All_leagues <- tibble::tibble(season = c("1718","1819","1920", "2021", "2122", "2223", '2324'),
                         filename = urls)
 
   All_leagues <- All_leagues %>%
@@ -115,7 +115,7 @@ Read_totals <- function(URL){
 }
 
 get_historical_totals <- function(URL){
-  All_leagues <- tibble::tibble(season = c("1718","1819","1920", "2021", "2122", "2223"),
+  All_leagues <- tibble::tibble(season = c("1718","1819","1920", "2021", "2122", "2223", "2324"),
                                 filename = urls)
 
   All_leagues <- All_leagues %>%
