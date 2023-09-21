@@ -1,14 +1,11 @@
 pacman::p_load(bets, tidyverse, implied)
 
-urls <- list(
-  "https://www.football-data.co.uk/mmz4281/1718/all-euro-data-2017-2018.xlsx",
-  "https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
-  "https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx"
-)
+urls <-
+  tibble::tribble(
+  ~season, ~filename,
+  '2324', 'https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx'
+  )
+
 hist_buch_data <- get_historical_buchdata(urls)
 
 hist_bets <- qs::qread(file.path("~/Documents/bets/output", "multimodel_bets.rds")) %>%
@@ -16,7 +13,8 @@ hist_bets <- qs::qread(file.path("~/Documents/bets/output", "multimodel_bets.rds
   replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
   mutate(date_start = date - 5,
                 date_end = date + 5) %>%
-  left_join(hist_buch_data %>% select(date, home:FTAG), by = dplyr::join_by(team1 == home, team2 == away, date_start <= date, date_end >= date)) %>%
+  left_join(hist_buch_data %>% select(date, home:FTAG),
+            by = dplyr::join_by(team1 == home, team2 == away, date_start <= date, date_end >= date)) %>%
   dplyr::select(-date.y, date_start, date_end) %>%
   dplyr::rename(date = date.x) %>%
   filter(date <= Sys.Date()) %>%
@@ -41,7 +39,7 @@ hist_bets <- hist_bets %>%
                              EV == EV2 ~ mla,
                              EV == EV1_hdp ~ home,
                              TRUE ~ away)) %>%
-  #filter(!is.na(FTR)) %>%
+  filter(!is.na(FTR)) %>%
   mutate(pnl = case_when(kohde == 1 & FTR == 'H' ~ (kerroin-1)*bet,
                          kohde == 2 & FTR == 'D' ~ (kerroin-1)*bet,
                          kohde == 3 & FTR == 'A' ~ (kerroin-1)*bet,
@@ -63,6 +61,15 @@ hist_bets <- hist_bets %>%
                          kohde == 7 ~ (kerroin/(1/(FDP+FAP))-1)*bet,
                          kohde == 8 ~ (kerroin/(1/FHP)-1)*bet,
                          kohde == 9 ~ (kerroin/(1/FAP)-1)*bet)) %>%
+  mutate(clv_raw = case_when(kohde == 1 ~ (kerroin/(1/FHP)-1)*1,
+                         kohde == 2 ~ (kerroin/(1/FDP)-1)*1,
+                         kohde == 3 ~ (kerroin/(1/FAP)-1)*1,
+                         kohde == 4 ~ (kerroin/((1-FDP)/(FHP))-1)*1,
+                         kohde == 5 ~ (kerroin/((1-FDP)/(FAP))-1)*1,
+                         kohde == 6 ~ (kerroin/(1/(FHP+FDP))-1)*1,
+                         kohde == 7 ~ (kerroin/(1/(FDP+FAP))-1)*1,
+                         kohde == 8 ~ (kerroin/(1/FHP)-1)*1,
+                         kohde == 9 ~ (kerroin/(1/FAP)-1)*1)) %>%
   mutate_if(is.numeric, round, 2)
 
 hist_bets
@@ -70,6 +77,17 @@ hist_bets %>%
   mutate(across(c('pnl', 'clv'), ~ cumsum(.))) %>%
   mutate(betno = row_number()) %>%
   select(betno, pnl, clv) %>%
+  pivot_longer(-betno) %>%
+  ggplot(aes(betno, value))+
+  geom_line(aes(color = name))
+
+hist_bets %>%
+  ggstatsplot::ggscatterstats(x = EV, y = clv_raw)
+
+hist_bets %>%
+  mutate(across(c('EV', 'clv_raw'), ~ cumsum(.))) %>%
+  mutate(betno = row_number()) %>%
+  select(betno, EV, clv_raw) %>%
   pivot_longer(-betno) %>%
   ggplot(aes(betno, value))+
   geom_line(aes(color = name))
@@ -134,23 +152,27 @@ hist_arviot <- hist_arviot %>%
          kohde = factor(kohde))
 
 hist_arviot <- hist_arviot %>%
-  mutate(clv = datawizard::winsorize(clv, threshold = 0.02),
-         EV = datawizard::winsorize(EV, threshold = 0.02))
+  mutate(clv = datawizard::winsorize(clv, threshold = 0.005),
+         EV = datawizard::winsorize(EV, threshold = 0.005))
 
-clv_reg <- lm(clv ~ EV, data = hist_arviot)
+clv_reg <- lm(clv ~ EV + kohde + kerroin, data = hist_arviot)
 clv_reg %>% summary()
 qs::qsave(clv_reg, file = here::here('output', 'clv_reg.rds'))
 
 hist_arviot %>%
-  #ggstatsplot::grouped_ggscatterstats(x = ev, y = clv, grouping.var = name) %>%
+  ggstatsplot::grouped_ggscatterstats(x = EV, y = clv, grouping.var = name) %>%
+  ggstatsplot::ggscatterstats(x = EV, y = clv)
+
+hist_arviot %>%
+  filter(EV > 0) %>%
   ggstatsplot::ggscatterstats(x = EV, y = clv)
 
 
 hist_arviot %>%
   select(EV, clv) %>%
-  mutate(ev_bin = ntile(EV, 15)) %>%
-  summarise(EV = mean(EV),
-            clv = mean(clv),
+  mutate(ev_bin = ntile(EV, 20)) %>%
+  summarise(EV = mean(EV, na.rm = TRUE),
+            clv = mean(clv, na.rm = TRUE),
             .by = ev_bin) %>%
   ggstatsplot::ggscatterstats(x = EV, y = clv)
 
@@ -211,22 +233,12 @@ tuned %>%
 
 
 
+ei_loytyneet <- hist_arviot %>%
+  filter(is.na(PSCH)) %>%
+  select(team1, team2, home) %>%
+  pivot_longer(-home) %>%
+  distinct(value)
 
-
-
-data(biomass, package = "modeldata")
-
-biomass_tr <- biomass[biomass$dataset == "Training", ]
-biomass_te <- biomass[biomass$dataset == "Testing", ]
-
-rec <- recipe(
-  HHV ~ carbon + hydrogen + oxygen + nitrogen + sulfur,
-  data = biomass_tr
-) %>%
-  step_discretize(carbon, hydrogen)
-
-rec <- prep(rec, biomass_tr)
-#> Warning: Note that the options `prefix` and `labels` will be applied to all variables
-binned_te <- bake(rec, biomass_te)
-
-binned_te
+ei_loytyneet %>%
+  mutate(in_buch = value %in% hist_buch_data$home) %>%
+  filter(!in_buch)

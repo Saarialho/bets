@@ -330,7 +330,7 @@ tibble::tribble(
           "valencia",               "valencia",               "Valencia",
         "valladolid",             "valladolid",             "Valladolid",
          "vancouver",    "vancouver whitecaps",    "Vancouver Whitecaps",
-     "vasco da gama",                  "vasco",          "Vasco Da Gama",
+             "vasco",                  "vasco",          "Vasco Da Gama",
            "venezia",                "venezia",                "Venezia",
           "veracruz",               "veracruz",               "Veracruz",
    "velez sarsfield",        "velez sarsfield",        "Velez Sarsfield",
