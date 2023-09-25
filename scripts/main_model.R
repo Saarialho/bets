@@ -39,7 +39,6 @@ main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/
                                        pinnacle_odds$league)
 new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
                                        pinnacle_odds$league)
-
 buch_leagues <- bind_rows(main_leagues, new_leagues)
 
 active_leagues <- buch_leagues %>%
@@ -84,7 +83,7 @@ main_data <- join_buch_fbref(buch_data = buch_leagues, fbref_data = fbref_league
 #naille ei saatu joinattua fbref dataa, nama on buch nimia
 unmatched_buch <- main_data %>%
   filter(is.na(h_xg)) %>%
-  filter(!(league %in% c('D2', 'SP2'))) %>%
+  #filter(!(league %in% c('D2', 'SP2'))) %>%
   select(league, home, away) %>%
   pivot_longer(-league, values_to = 'buch_name') %>%
   distinct(buch_name, .keep_all = TRUE) %>%
@@ -112,6 +111,9 @@ main_data %>%
   filter(is.na(h_xg))
 
 main_data %>%
+  filter(is.na(h_xg))
+
+main_data %>%
   select(league, h_xg) %>%
   group_by(league) %>%
   skimr::skim()
@@ -124,6 +126,9 @@ main_data %>%
   select(league, h_xg) %>%
   group_by(league) %>%
   skimr::skim()
+
+main_data %>%
+  count(league)
 
 fbref_leagues %>%
   summarise(max_date = max(date), .by = league)
@@ -171,7 +176,6 @@ if(nrow(problems) > 0){
     select(league, closest_match, pin_teams) %>%
     distinct(league, closest_match, .keep_all = TRUE)
   team_names_map
-
 }
 
 models <- models %>%

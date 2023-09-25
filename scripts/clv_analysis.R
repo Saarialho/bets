@@ -114,11 +114,8 @@ hist_totals_data %>%
   ggplot(aes(betno, value))+
   geom_line(aes(color = name))
 
-
-
 # ---- arviot ----
 hist_arviot <- qs::qread(file.path("~/Documents/bets/output", "multimodel_arviot.rds")) %>%
-  slice(4327:n()) %>%
   replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
   mutate(date_start = date - 5,
          date_end = date + 5) %>%
