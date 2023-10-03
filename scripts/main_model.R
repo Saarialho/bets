@@ -1,7 +1,7 @@
 pacman::p_load(bets, tidyverse)
 
 log_in_pinnacle()
-main_leagues_only <- TRUE #vaihda tahan riippuen Buchdalin paivityksista
+main_leagues_only <- FALSE #vaihda tahan riippuen Buchdalin paivityksista
 
 # mallien paramterit ----
 coefs <- qs::qread(here::here('models', 'lasso_coefs.rds'))
@@ -16,30 +16,31 @@ totals_configs <- qs::qread(here::here('models', 'totals_lasso_models.rds')) %>%
 
 # liigojen haut ----
 
-
-#D2 ja SP2 ei loydy xgta, pois?
 league_specs <-
   tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
          league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'),
          fbref_cntry = c('ITA','POR','NED','ESP','ENG','ESP','FRA','GER','ENG','GER','MEX','USA','BRA','ARG'),
          tier = c('1st','1st','1st','1st','1st','2nd','1st','1st','2nd','2nd','1st','1st','1st','1st'))
 
-if(main_leagues_only){
-  league_specs <- league_specs %>%
-    filter(!(league %in% c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional')))
-}
-
-
 pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
   rename(league.id = leagues.id) %>%
   group_nest(league.id, .key = 'pelit') %>%
   left_join(league_specs)
 
-main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
-                                       pinnacle_odds$league)
-new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
-                                       pinnacle_odds$league)
-buch_leagues <- bind_rows(main_leagues, new_leagues)
+if(main_leagues_only){
+  league_specs <- league_specs %>%
+    filter(!(league %in% c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional')))
+
+  buch_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
+                                         pinnacle_odds$league)
+} else {
+  main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
+                                         pinnacle_odds$league)
+
+  new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
+                                         pinnacle_odds$league)
+  buch_leagues <- bind_rows(main_leagues, new_leagues)
+}
 
 active_leagues <- buch_leagues %>%
   summarise(days_since_last = as.double(Sys.Date()-last(date)), .by = league) %>%
@@ -127,9 +128,6 @@ main_data %>%
   group_by(league) %>%
   skimr::skim()
 
-main_data %>%
-  count(league)
-
 fbref_leagues %>%
   summarise(max_date = max(date), .by = league)
 
@@ -139,6 +137,7 @@ main_data %>%
 # muutetaan pinnacle nimet
 pin_names <- main_data %>%
   replace_team_names(home, away, pattern = team_dictionary()$buch_name, replacement = team_dictionary()$pin_name)
+pin_names %>% count(league)
 
 models <- tibble(totals = c(FALSE, TRUE),
        configs = list(configs, totals_configs)) %>%

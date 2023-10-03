@@ -9,7 +9,6 @@ urls <-
 hist_buch_data <- get_historical_buchdata(urls)
 
 hist_bets <- qs::qread(file.path("~/Documents/bets/output", "multimodel_bets.rds")) %>%
-  slice(835:n()) %>%
   replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
   mutate(date_start = date - 5,
                 date_end = date + 5) %>%
@@ -152,12 +151,13 @@ hist_arviot <- hist_arviot %>%
   mutate(clv = datawizard::winsorize(clv, threshold = 0.005),
          EV = datawizard::winsorize(EV, threshold = 0.005))
 
+#lisaa liiga dummyt jossain vaiheessa
 clv_reg <- lm(clv ~ EV + kohde + kerroin, data = hist_arviot)
 clv_reg %>% summary()
 qs::qsave(clv_reg, file = here::here('output', 'clv_reg.rds'))
 
 hist_arviot %>%
-  ggstatsplot::grouped_ggscatterstats(x = EV, y = clv, grouping.var = name) %>%
+  #ggstatsplot::grouped_ggscatterstats(x = EV, y = clv, grouping.var = name) %>%
   ggstatsplot::ggscatterstats(x = EV, y = clv)
 
 hist_arviot %>%
