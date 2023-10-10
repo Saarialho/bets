@@ -80,18 +80,6 @@ hist_bets %>%
   ggplot(aes(betno, value))+
   geom_line(aes(color = name))
 
-hist_bets %>%
-  ggstatsplot::ggscatterstats(x = EV, y = clv_raw)
-
-hist_bets %>%
-  mutate(across(c('EV', 'clv_raw'), ~ cumsum(.))) %>%
-  mutate(betno = row_number()) %>%
-  select(betno, EV, clv_raw) %>%
-  pivot_longer(-betno) %>%
-  ggplot(aes(betno, value))+
-  geom_line(aes(color = name))
-
-
 hist_totals_data <- qs::qread(file.path("~/Documents/bets/output", "totals_bets.rds")) %>%
   replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
   mutate(date_start = date - 5,

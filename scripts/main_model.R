@@ -1,7 +1,7 @@
 pacman::p_load(bets, tidyverse)
 
 log_in_pinnacle()
-main_leagues_only <- FALSE #vaihda tahan riippuen Buchdalin paivityksista
+main_leagues_only <- TRUE #vaihda tahan riippuen Buchdalin paivityksista
 
 # mallien paramterit ----
 coefs <- qs::qread(here::here('models', 'lasso_coefs.rds'))
@@ -34,12 +34,11 @@ if(main_leagues_only){
   buch_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
                                          pinnacle_odds$league)
 } else {
-  main_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
-                                         pinnacle_odds$league)
+  league_specs <- league_specs %>%
+    filter(league %in% c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional'))
 
-  new_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
+  buch_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
                                          pinnacle_odds$league)
-  buch_leagues <- bind_rows(main_leagues, new_leagues)
 }
 
 active_leagues <- buch_leagues %>%
