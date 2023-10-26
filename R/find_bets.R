@@ -23,7 +23,10 @@ find_bets <- function(arviot, totals = TRUE){
 
     clv_model <- qs::qread(here::here('output', 'clv_reg.rds'))
     to_predict <- arviot %>%
-      dplyr::mutate(kerroin = log(kerroin))
+      dplyr::mutate(moneyline = dplyr::case_when(kohde == '1' ~ mlh,
+                                                 kohde == '2' ~ mld,
+                                                 TRUE ~ mla)) %>%
+      dplyr::mutate(moneyline = log(moneyline))
 
     clv_pred <- predict(clv_model, to_predict)
     clv_pred <- tibble::tibble(clv_pred)
@@ -32,7 +35,7 @@ find_bets <- function(arviot, totals = TRUE){
       dplyr::bind_cols(clv_pred)
 
     betit <- arviot %>%
-      dplyr::filter(clv_pred > 0.01, dts >= 1) %>%
+      dplyr::filter(clv_pred >= 0.015, dts >= 1) %>%
       dplyr::filter(!(id %in% hist_bets$id)) %>%
       dplyr::mutate(bet = purrr::pmap_dbl(list(clv_pred, kerroin, maxbet), bets::kelly_bet)) %>%
       dplyr::mutate(dplyr::across(where(is.numeric), ~ round(., 3)))

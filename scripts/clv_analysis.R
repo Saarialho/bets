@@ -71,7 +71,7 @@ hist_bets <- hist_bets %>%
                          kohde == 9 ~ (kerroin/(1/FAP)-1)*1)) %>%
   mutate_if(is.numeric, round, 2)
 
-hist_bets
+
 hist_bets %>%
   mutate(across(c('pnl', 'clv'), ~ cumsum(.))) %>%
   mutate(betno = row_number()) %>%
@@ -80,26 +80,17 @@ hist_bets %>%
   ggplot(aes(betno, value))+
   geom_line(aes(color = name))
 
-hist_totals_data <- qs::qread(file.path("~/Documents/bets/output", "totals_bets.rds")) %>%
-  replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
-  mutate(date_start = date - 5,
-         date_end = date + 5) %>%
-  left_join(hist_buch_data %>% select(date, home:FTAG), by = dplyr::join_by(team1 == home, team2 == away, date_start <= date, date_end >= date)) %>%
-  dplyr::select(-date.y, date_start, date_end) %>%
-  dplyr::rename(date = date.x) %>%
-  filter(date < Sys.Date()) %>%
-  select(-max, -starts_with('date_'), -id) %>%
-  mutate(pnl = case_when(kohde == 1 & FTHG + FTAG > 2.5 ~ bet*(over-1),
-                         kohde == 2 & FTHG + FTAG < 2.5 ~ bet*(under-1),
-                         TRUE ~ -bet))
+hist_bets %>% ggstatsplot::ggscatterstats(EV, clv_raw)
+summary(lm(clv_raw ~ EV + kohde + kerroin, data = hist_bets))
 
-hist_totals_data %>%
-  mutate(across(c('pnl'), ~ cumsum(.))) %>%
-  mutate(betno = row_number()) %>%
-  select(betno, pnl) %>%
-  pivot_longer(-betno) %>%
-  ggplot(aes(betno, value))+
-  geom_line(aes(color = name))
+hist_bets %>%
+  select(EV, clv_raw) %>%
+  mutate(bin = ntile(EV, 3)) %>%
+  summarise(mean_ev = mean(EV),
+            mean_clv = mean(clv_raw),
+            n = n(),
+            .by = bin) %>%
+  arrange(bin)
 
 # ---- arviot ----
 hist_arviot <- qs::qread(file.path("~/Documents/bets/output", "multimodel_arviot.rds")) %>%
@@ -125,22 +116,22 @@ hist_arviot <- hist_arviot %>%
   mutate(clv = case_when(name == 'EV1' ~ clv_home,
                          name == 'EVD' ~ clv_draw,
                          TRUE ~ clv_away),
-         kerroin = case_when(name == 'EV1' ~ mlh,
+         moneyline = case_when(name == 'EV1' ~ mlh,
                          name == 'EVD' ~ mld,
                          TRUE ~ mla),
          kohde = case_when(name == 'EV1' ~ 1,
                            name == 'EVD' ~ 2,
                            TRUE ~ 3)) %>%
-  mutate(kerroin = log(kerroin),
+  mutate(moneyline = log(moneyline),
          maxbet = log(maxbet),
          kohde = factor(kohde))
 
 hist_arviot <- hist_arviot %>%
-  mutate(clv = datawizard::winsorize(clv, threshold = 0.005),
-         EV = datawizard::winsorize(EV, threshold = 0.005))
+  mutate(clv = datawizard::winsorize(clv, threshold = 0.01),
+         EV = datawizard::winsorize(EV, threshold = 0.01))
 
 #lisaa liiga dummyt jossain vaiheessa
-clv_reg <- lm(clv ~ EV + kohde + kerroin, data = hist_arviot)
+clv_reg <- lm(clv ~ EV + kohde + moneyline, data = hist_arviot)
 clv_reg %>% summary()
 qs::qsave(clv_reg, file = here::here('output', 'clv_reg.rds'))
 
@@ -153,77 +144,77 @@ hist_arviot %>%
   ggstatsplot::ggscatterstats(x = EV, y = clv)
 
 
-hist_arviot %>%
-  select(EV, clv) %>%
-  mutate(ev_bin = ntile(EV, 20)) %>%
-  summarise(EV = mean(EV, na.rm = TRUE),
-            clv = mean(clv, na.rm = TRUE),
-            .by = ev_bin) %>%
-  ggstatsplot::ggscatterstats(x = EV, y = clv)
-
-
-library(tidymodels)
-
-train_data <- hist_arviot %>%
-  select(league, kohde, kerroin, EV, clv)
-
-model_spec <-
-  linear_reg(penalty = tune::tune(), mixture = 1) %>%
-  set_engine("glmnet", lower.limits = 0, lambda.min.ratio = 0)
-
-model_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
-  update_role(everything()) %>%
-  update_role(clv, new_role = "outcome") %>%
-  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-  step_dummy(all_nominal_predictors()) %>%
-  step_zv(all_numeric_predictors())
-
-discrete_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
-  update_role(everything()) %>%
-  update_role(clv, new_role = "outcome") %>%
-  step_discretize(EV, num_breaks = 9) %>%
-  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-  step_dummy(all_nominal_predictors()) %>%
-  step_zv(all_numeric_predictors())
-
-interact_rec <-
-  recipe(train_data %>% dplyr::slice(0)) %>%
-  update_role(everything()) %>%
-  update_role(clv, new_role = "outcome") %>%
-  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-  step_interact(terms = ~ kohde:league) %>%
-  step_dummy(all_nominal_predictors()) %>%
-  step_zv(all_numeric_predictors())
-
-wfset <-
-  workflow_set(
-    preproc = list(norm = model_rec, interact = interact_rec, discrete = discrete_rec),
-    models = list(lasso = model_spec)
-  )
-wfset
-
-options(tidymodels.dark = TRUE)
-
-tuned <-
-  wfset %>%
-  workflow_map(
-    resamples = rsample::bootstraps(train_data, 20),
-    grid = 20,
-    metrics = metric_set(rsq_trad),
-    control = control_grid(save_pred = FALSE, save_workflow = TRUE)
-  )
-
-tuned %>%
-  rank_results()
-
-
-
-ei_loytyneet <- hist_arviot %>%
-  filter(is.na(PSCH)) %>%
-  select(team1, team2, home) %>%
-  pivot_longer(-home) %>%
-  distinct(value)
-
-ei_loytyneet %>%
-  mutate(in_buch = value %in% hist_buch_data$home) %>%
-  filter(!in_buch)
+# hist_arviot %>%
+#   select(EV, clv) %>%
+#   mutate(ev_bin = ntile(EV, 20)) %>%
+#   summarise(EV = mean(EV, na.rm = TRUE),
+#             clv = mean(clv, na.rm = TRUE),
+#             .by = ev_bin) %>%
+#   ggstatsplot::ggscatterstats(x = EV, y = clv)
+#
+#
+# library(tidymodels)
+#
+# train_data <- hist_arviot %>%
+#   select(league, kohde, kerroin, EV, clv)
+#
+# model_spec <-
+#   linear_reg(penalty = tune::tune(), mixture = 1) %>%
+#   set_engine("glmnet", lower.limits = 0, lambda.min.ratio = 0)
+#
+# model_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
+#   update_role(everything()) %>%
+#   update_role(clv, new_role = "outcome") %>%
+#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+#   step_dummy(all_nominal_predictors()) %>%
+#   step_zv(all_numeric_predictors())
+#
+# discrete_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
+#   update_role(everything()) %>%
+#   update_role(clv, new_role = "outcome") %>%
+#   step_discretize(EV, num_breaks = 9) %>%
+#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+#   step_dummy(all_nominal_predictors()) %>%
+#   step_zv(all_numeric_predictors())
+#
+# interact_rec <-
+#   recipe(train_data %>% dplyr::slice(0)) %>%
+#   update_role(everything()) %>%
+#   update_role(clv, new_role = "outcome") %>%
+#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+#   step_interact(terms = ~ kohde:league) %>%
+#   step_dummy(all_nominal_predictors()) %>%
+#   step_zv(all_numeric_predictors())
+#
+# wfset <-
+#   workflow_set(
+#     preproc = list(norm = model_rec, interact = interact_rec, discrete = discrete_rec),
+#     models = list(lasso = model_spec)
+#   )
+# wfset
+#
+# options(tidymodels.dark = TRUE)
+#
+# tuned <-
+#   wfset %>%
+#   workflow_map(
+#     resamples = rsample::bootstraps(train_data, 20),
+#     grid = 20,
+#     metrics = metric_set(rsq_trad),
+#     control = control_grid(save_pred = FALSE, save_workflow = TRUE)
+#   )
+#
+# tuned %>%
+#   rank_results()
+#
+#
+#
+# ei_loytyneet <- hist_arviot %>%
+#   filter(is.na(PSCH)) %>%
+#   select(team1, team2, home) %>%
+#   pivot_longer(-home) %>%
+#   distinct(value)
+#
+# ei_loytyneet %>%
+#   mutate(in_buch = value %in% hist_buch_data$home) %>%
+#   filter(!in_buch)

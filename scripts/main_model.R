@@ -195,7 +195,10 @@ betit %>%
   select(team1:mla, EV1:EV2, hdp:away, kerroin, kohde, clv_pred, bet) %>%
   arrange(desc(clv_pred))
 
-pwalk(list(data_to_save$value, data_to_save$arviot_lgl, data_to_save$totals), save_bets)
+if(nrow(unmatched_names) == 0 & !exists('team_names_map')){
+  pwalk(list(data_to_save$value, data_to_save$arviot_lgl, data_to_save$totals), save_bets)
+  message('vedot lyoty')
+}
 
 #map2(betit$value, betit$totals, send_notification)
 
