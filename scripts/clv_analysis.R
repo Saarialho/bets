@@ -32,7 +32,7 @@ hist_bets <- hist_bets %>%
                          EV == EV1_hdp & hdp == 0.5 ~ 6, #handicap +0.5
                          EV == EV2_hdp & hdp == 0.5 ~ 7,
                          EV == EV1_hdp & hdp == -0.5 ~ 8,
-                         EV == EV2_hdp & hdp == -0.5 ~ 9)) %>% # handicap -0.5
+                         EV == EV2_hdp & hdp == -0.5 ~ 9)) %>% #handicap -0.5
   mutate(kerroin = case_when(EV == EV1 ~ mlh,
                              EV == EVD ~ mld,
                              EV == EV2 ~ mla,
@@ -46,29 +46,21 @@ hist_bets <- hist_bets %>%
                          kohde == 5 & FTR == 'A' ~ (kerroin-1)*bet,
                          kohde == 4 & FTR == 'D' ~ 0,
                          kohde == 5 & FTR == 'D' ~ 0,
-                         kohde == 6 & (FTR == 'D' | FTR == 'H') ~ (kerroin-1)*bet,
-                         kohde == 7 & (FTR == 'D' | FTR == 'A') ~ (kerroin-1)*bet,
+                         kohde == 6 & (FTR == 'D' | FTR == 'H') ~ (kerroin-1)*bet, #kotijengi +0.5 ja betsi kotijengille
+                         kohde == 7 & FTR == 'A' ~ (kerroin-1)*bet,
                          kohde == 8 & FTR == 'H'  ~ (kerroin-1)*bet,
-                         kohde == 9 & FTR == 'A'  ~ (kerroin-1)*bet,
+                         kohde == 9 & (FTR == 'A' | FTR == 'D')  ~ (kerroin-1)*bet, #kotijengi -0.5 ja betsi vieraallle
                          TRUE ~ -bet)) %>%
-  mutate(clv = case_when(kohde == 1 ~ (kerroin/(1/FHP)-1)*bet,
-                         kohde == 2 ~ (kerroin/(1/FDP)-1)*bet,
-                         kohde == 3 ~ (kerroin/(1/FAP)-1)*bet,
-                         kohde == 4 ~ (kerroin/((1-FDP)/(FHP))-1)*bet,
-                         kohde == 5 ~ (kerroin/((1-FDP)/(FAP))-1)*bet,
-                         kohde == 6 ~ (kerroin/(1/(FHP+FDP))-1)*bet,
-                         kohde == 7 ~ (kerroin/(1/(FDP+FAP))-1)*bet,
-                         kohde == 8 ~ (kerroin/(1/FHP)-1)*bet,
-                         kohde == 9 ~ (kerroin/(1/FAP)-1)*bet)) %>%
-  mutate(clv_raw = case_when(kohde == 1 ~ (kerroin/(1/FHP)-1)*1,
-                         kohde == 2 ~ (kerroin/(1/FDP)-1)*1,
-                         kohde == 3 ~ (kerroin/(1/FAP)-1)*1,
-                         kohde == 4 ~ (kerroin/((1-FDP)/(FHP))-1)*1,
-                         kohde == 5 ~ (kerroin/((1-FDP)/(FAP))-1)*1,
-                         kohde == 6 ~ (kerroin/(1/(FHP+FDP))-1)*1,
-                         kohde == 7 ~ (kerroin/(1/(FDP+FAP))-1)*1,
-                         kohde == 8 ~ (kerroin/(1/FHP)-1)*1,
-                         kohde == 9 ~ (kerroin/(1/FAP)-1)*1)) %>%
+  mutate(clv_raw = case_when(kohde == 1 ~ (kerroin/(1/FHP)-1),
+                             kohde == 2 ~ (kerroin/(1/FDP)-1),
+                             kohde == 3 ~ (kerroin/(1/FAP)-1),
+                             kohde == 4 ~ (kerroin/((1-FDP)/(FHP))-1),
+                             kohde == 5 ~ (kerroin/((1-FDP)/(FAP))-1),
+                             kohde == 6 ~ (kerroin/(1/(FHP+FDP))-1),
+                             kohde == 7 ~ (kerroin/(1/FAP)-1),
+                             kohde == 8 ~ (kerroin/(1/FHP)-1),
+                             kohde == 9 ~ (kerroin/(1/(FAP+FDP))-1))) %>%
+  mutate(clv = clv_raw*bet) %>%
   mutate_if(is.numeric, round, 2)
 
 
