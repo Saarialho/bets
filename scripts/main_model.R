@@ -63,7 +63,7 @@ latest_comps <- vroom::vroom(
 fbref_map <- tibble(fbref_country = pinnacle_odds$fbref_cntry,
                     tier = pinnacle_odds$tier) %>%
   left_join(latest_comps, by = c('fbref_country' = 'country')) %>%
-  distinct(c(fbref_country, tier, season_end_year), .keep_all = TRUE)
+  distinct(fbref_country, tier, season_end_year, .keep_all = TRUE)
 
 fbref_leagues <- pmap_dfr(
   list(fbref_map$fbref_country, fbref_map$tier, fbref_map$season_end_year),
