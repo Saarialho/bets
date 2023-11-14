@@ -72,6 +72,21 @@ hist_bets %>%
   ggplot(aes(betno, value))+
   geom_line(aes(color = name))
 
+hist_bets %>%
+  select(league, clv) %>%
+  mutate(bet = row_number(),
+         cum_clv = cumsum(clv),
+         .by = league) %>%
+  ggplot(aes(bet, cum_clv, color = league))+
+  geom_line()
+
+hist_bets %>%
+  select(league, clv) %>%
+  summarise(clv_raw = sum(clv),
+            n = n(),
+            .by = league) %>%
+  arrange(desc(n))
+
 hist_bets %>% ggstatsplot::ggscatterstats(EV, clv_raw)
 summary(lm(clv_raw ~ EV + kohde + kerroin, data = hist_bets))
 
@@ -119,8 +134,8 @@ hist_arviot <- hist_arviot %>%
          kohde = factor(kohde))
 
 hist_arviot <- hist_arviot %>%
-  mutate(clv = datawizard::winsorize(clv, threshold = 0.01),
-         EV = datawizard::winsorize(EV, threshold = 0.01))
+  mutate(clv = datawizard::winsorize(clv, threshold = 0.005),
+         EV = datawizard::winsorize(EV, threshold = 0.005))
 
 #lisaa liiga dummyt jossain vaiheessa
 clv_reg <- lm(clv ~ EV + kohde + moneyline, data = hist_arviot)
@@ -210,3 +225,14 @@ hist_arviot %>%
 # ei_loytyneet %>%
 #   mutate(in_buch = value %in% hist_buch_data$home) %>%
 #   filter(!in_buch)
+
+
+
+
+# hist_arviot %>%
+#   select(EV, clv, moneyline) %>%
+#   mutate(bin = ntile(moneyline, 3)) %>%
+#   mutate(bin = factor(bin)) %>%
+#   ggpubr::ggscatter(x = "EV", y = "clv", color = "bin",
+#           palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+#           add = "reg.line")

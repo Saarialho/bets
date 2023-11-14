@@ -56,16 +56,17 @@ latest_comps <- vroom::vroom(
   select(competition_type, competition_name, country, last_season, season_end_year) %>%
   distinct() %>%
   filter(str_detect(competition_type, '1st|2nd')) %>%
-  filter(season_end_year == max(season_end_year), .by = c(competition_type, competition_name))
+  filter(season_end_year == max(season_end_year), .by = c(competition_type, competition_name)) %>%
+  arrange(competition_name, season_end_year) %>%
+  slice_head(n = 1, by = country)
 
 fbref_map <- tibble(fbref_country = pinnacle_odds$fbref_cntry,
                     tier = pinnacle_odds$tier) %>%
-  mutate(season = if_else(fbref_country %in% c('BRA', 'USA'), #MEX jostain syysta sama kuin main leagues
-                          max(latest_comps$season_end_year)-1,
-                          max(latest_comps$season_end_year)))
+  left_join(latest_comps, by = c('fbref_country' = 'country')) %>%
+  distinct(c(fbref_country, tier, season_end_year), .keep_all = TRUE)
 
 fbref_leagues <- pmap_dfr(
-  list(fbref_map$fbref_country, fbref_map$tier, fbref_map$season),
+  list(fbref_map$fbref_country, fbref_map$tier, fbref_map$season_end_year),
   get_fbref_data) %>%
   arrange(date) %>%
   filter(!is.na(hg))
