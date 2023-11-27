@@ -1,7 +1,9 @@
 pacman::p_load(bets, tidyverse)
 
 log_in_pinnacle()
-main_leagues_only <- TRUE #vaihda tahan riippuen Buchdalin paivityksista
+main_leagues_only <- T #vaihda tahan riippuen Buchdalin paivityksista
+exclude_leagues <- NULL #c('I1', 'E0', 'SP1')
+extra_leagues <- c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional')
 
 # mallien paramterit ----
 coefs <- qs::qread(here::here('models', 'lasso_coefs.rds'))
@@ -22,23 +24,35 @@ league_specs <-
          fbref_cntry = c('ITA','POR','NED','ESP','ENG','ESP','FRA','GER','ENG','GER','MEX','USA','BRA','ARG'),
          tier = c('1st','1st','1st','1st','1st','2nd','1st','1st','2nd','2nd','1st','1st','1st','1st'))
 
-pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
-  rename(league.id = leagues.id) %>%
-  group_nest(league.id, .key = 'pelit') %>%
-  left_join(league_specs)
+if(!is.null(exclude_leagues)){
+  league_specs <- league_specs %>%
+    filter(!(league %in% exclude_leagues))
+}
 
 if(main_leagues_only){
   league_specs <- league_specs %>%
-    filter(!(league %in% c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional')))
+    filter(!(league %in% extra_leagues))
+
+  pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
+    rename(league.id = leagues.id) %>%
+    filter(date > Sys.Date()+1) %>%
+    group_nest(league.id, .key = 'pelit') %>%
+    left_join(league_specs)
 
   buch_leagues <- bets::get_main_leagues('https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx',
                                          pinnacle_odds$league)
 } else {
   league_specs <- league_specs %>%
-    filter(league %in% c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional'))
+    filter(league %in% extra_leagues)
+
+  pinnacle_odds <- get_pinnacle_odds(league_specs$league.id) %>%
+    rename(league.id = leagues.id) %>%
+    filter(date > Sys.Date()+1) %>%
+    group_nest(league.id, .key = 'pelit') %>%
+    left_join(league_specs)
 
   buch_leagues <- bets::get_extra_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx',
-                                         pinnacle_odds$league)
+                                          pinnacle_odds$league)
 }
 
 active_leagues <- buch_leagues %>%
