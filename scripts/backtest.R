@@ -5,6 +5,19 @@ library(goalmodel)
 
 data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
 
+bets::hist_buch_data %>% count(league)
+bets::fbref_data %>% count(league)
+
+bets::hist_buch_data %>%
+  filter(league == 'SP2') %>%
+  count(home) %>%
+  View()
+
+bets::fbref_data %>%
+  filter(league == 'Segunda División') %>%
+  count(home) %>%
+  View()
+
 data %>% skimr::skim()
 
 data %>%
@@ -14,7 +27,10 @@ data %>%
 
 data <- data %>%
   filter(case_when(league %in% c("E1", "N1", "P1") ~ season != "1718",
-                   TRUE ~ season == season))
+                   TRUE ~ season == season)) %>%
+  filter(case_when(league %in% c("MLS") ~ season != "1819",
+                   TRUE ~ season == season)) %>%
+  filter(league != 'I2')
 
 problems <- data %>%
   group_by(home) %>%
