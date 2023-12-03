@@ -57,6 +57,7 @@ get_historical_buchdata <- function(urls){
 
   new_leagues <- Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx') %>%
     dplyr::filter(stringr::str_detect(league, 'MLS|Liga MX|Serie|Liga Profe')) %>%
+    dplyr::filter(!stringr::str_detect(league, 'Copa')) %>%
     dplyr::mutate(date = lubridate::as_date(date)) %>%
     dplyr::filter(season >= 2018) %>%
     dplyr::mutate(season = dplyr::case_when(season == '2018' ~ '1819',
