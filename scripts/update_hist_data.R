@@ -1,6 +1,6 @@
-library(tidyverse)
+pacman::p_load(bets, tidyverse)
 
-seasons <- seq(2018, 2023, 1)
+seasons <- seq(2019, 2023, 1)
 league_specs <-
   tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
          league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'),
@@ -9,22 +9,23 @@ league_specs <-
 
 fb_ref_grid <- expand_grid(seasons, league_specs)
 
-fbref_data <- pmap_dfr(list(pinnacle_odds$fbref_cntry, pinnacle_odds$tier, fb_ref_grid$seasons), get_fbref_data) %>%
+fbref_data <- pmap_dfr(list(fb_ref_grid$fbref_cntry, fb_ref_grid$tier, fb_ref_grid$seasons), get_fbref_data) %>%
   arrange(date) %>%
   filter(!is.na(hg))
 
-fbref_data <- get_fbref_data(seasons)
 use_data(fbref_data, overwrite = TRUE)
 
+urls <-
+  tibble::tribble(
+    ~filename,
+    "https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
+    "https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
+    "https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
+    "https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
+    "https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx",
+    "https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx"
+  )
 
-urls <- list(
-  "https://www.football-data.co.uk/mmz4281/1718/all-euro-data-2017-2018.xlsx",
-  "https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx",
-  "https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx",
-  "https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx"
-)
 
 hist_buch_data <- get_historical_buchdata(urls)
 

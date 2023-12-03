@@ -54,6 +54,7 @@ Read_new_leagues <- function(URL){
 #' @param urls for mainleagues
 #' @export
 get_historical_buchdata <- function(urls){
+
   new_leagues <- Read_new_leagues('https://www.football-data.co.uk/new/new_leagues_data.xlsx') %>%
     dplyr::filter(stringr::str_detect(league, 'MLS|Liga MX|Serie|Liga Profe')) %>%
     dplyr::mutate(date = lubridate::as_date(date)) %>%
@@ -71,7 +72,6 @@ get_historical_buchdata <- function(urls){
     dplyr::mutate(data = purrr::map(filename, Read_excel_files)) %>%
     dplyr::select(-filename)
 
-  #tahan voisi lisata D2, SP2 ja I2?
   liigat <- c("E0", "D1", "SP1", "I1", "F1", "E1", "P1", "N1", "D2", "SP2", "I2")
 
   All_leagues <- All_leagues %>%
