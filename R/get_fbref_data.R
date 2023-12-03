@@ -26,9 +26,8 @@ get_fbref_data <- function(countries, tiers, seasons){
     dplyr::mutate(dplyr::across(c(home, away), ~tolower(.))) %>%
     dplyr::mutate(dplyr::across(c(home, away), ~stringr::str_remove_all(., "[[:punct:]]"))) %>%
     #santos seka MX etta Bras liigoissa
-    dplyr::mutate(dplyr::across(c(home, away), ~ dplyr::if_else(league == 'Liga MX' & . == 'santos', 'santos laguna', .)))
+    dplyr::mutate(dplyr::across(c(home, away), ~ dplyr::if_else(league == 'Liga MX' & . == 'santos', 'santos laguna', .))) %>%
+    dplyr::mutate(dplyr::across(c(home, away), ~ dplyr::if_else(league == 'Argentine Primera División' & . == 'arsenal', 'arsenal sarandi', .)))
 }
-
-
 
 
