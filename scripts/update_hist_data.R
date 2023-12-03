@@ -22,8 +22,9 @@ urls <-
     '2019', 'https://www.football-data.co.uk/mmz4281/1819/all-euro-data-2018-2019.xlsx',
     '2020', 'https://www.football-data.co.uk/mmz4281/1920/all-euro-data-2019-2020.xlsx',
     '2021', 'https://www.football-data.co.uk/mmz4281/2021/all-euro-data-2020-2021.xlsx',
-    '2022', 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx',
-    '2023', 'https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx'
+    '2022', 'https://www.football-data.co.uk/mmz4281/2122/all-euro-data-2021-2022.xlsx',
+    '2023', 'https://www.football-data.co.uk/mmz4281/2223/all-euro-data-2022-2023.xlsx',
+    '2024', 'https://www.football-data.co.uk/mmz4281/2324/all-euro-data-2023-2024.xlsx'
   )
 
 hist_buch_data <- get_historical_buchdata(urls)
