@@ -26,7 +26,9 @@ find_bets <- function(arviot, totals = TRUE){
       dplyr::mutate(moneyline = dplyr::case_when(kohde == '1' ~ mlh,
                                                  kohde == '2' ~ mld,
                                                  TRUE ~ mla)) %>%
-      dplyr::mutate(moneyline = log(moneyline))
+      dplyr::mutate(moneyline = log(moneyline),
+                    maxbet = log(maxbet),
+                    plus_ev = factor(dplyr::if_else(EV > 0, 1, 0)))
 
     clv_pred <- predict(clv_model, to_predict)
     clv_pred <- tibble::tibble(clv_pred)

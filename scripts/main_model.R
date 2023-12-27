@@ -2,7 +2,8 @@ pacman::p_load(bets, tidyverse)
 
 log_in_pinnacle()
 main_leagues_only <- T #vaihda tahan riippuen Buchdalin paivityksista
-exclude_leagues <- NULL #c('I1', 'E0', 'SP1')
+exclude_leagues <- NULL
+#exclude_leagues <- c('SP1', 'SP2', 'D1')
 extra_leagues <- c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional')
 
 # mallien paramterit ----
@@ -18,6 +19,7 @@ totals_configs <- qs::qread(here::here('models', 'totals_lasso_models.rds')) %>%
 
 # liigojen haut ----
 
+#lisattavia I2, Belgia, F2
 league_specs <-
   tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697),
          league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional'),
