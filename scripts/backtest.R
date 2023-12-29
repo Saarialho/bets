@@ -83,7 +83,7 @@ weights
 library(foreach)
 library(doParallel)
 # Register parallel backend
-cl <- makeCluster(2)
+cl <- makeCluster(8)
 registerDoParallel(cl)
 clusterEvalQ(cl, {
   library(tidyverse)

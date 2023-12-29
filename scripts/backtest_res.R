@@ -91,9 +91,9 @@ options(tidymodels.dark = TRUE)
 tuned <-
   wfset %>%
   workflow_map(
-    resamples = rsample::bootstraps(oof_predictions, 80),
-    grid = 80,
-    metrics = metric_set(rsq_trad),
+    resamples = rsample::bootstraps(oof_predictions, 50),
+    grid = 50,
+    metrics = metric_set(rmse),
     control = control_grid(save_pred = FALSE, save_workflow = TRUE)
   )
 
@@ -103,7 +103,7 @@ tuned %>%
 best_param <-
   tuned %>%
   extract_workflow_set_result("interact_lasso") %>%
-  select_best(metric = "rsq_trad")
+  select_best(metric = "rmse")
 
 meta_model <- tuned %>%
   extract_workflow("interact_lasso") %>%
@@ -114,6 +114,7 @@ meta_model <- tuned %>%
 lasso_coefs <- meta_model %>%
   extract_fit_parsnip() %>%
   tidy() %>%
+  arrange(desc(estimate)) %>%
   filter(estimate != 0)
 
 lasso_coefs %>%
