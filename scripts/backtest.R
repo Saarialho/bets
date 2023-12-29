@@ -5,25 +5,31 @@ library(goalmodel)
 
 data <- join_buch_fbref(bets::hist_buch_data, bets::fbref_data)
 
-bets::hist_buch_data %>% count(league)
-bets::fbref_data %>% count(league)
-
-bets::hist_buch_data %>%
-  filter(league == 'SP2') %>%
-  count(home) %>%
-  View()
-
-bets::fbref_data %>%
-  filter(league == 'Segunda División') %>%
-  count(home) %>%
-  View()
-
-data %>% skimr::skim()
-
 data %>%
   select(season, league, h_xg) %>%
   group_by(season, league) %>%
   skimr::skim()
+
+bets::hist_buch_data %>% count(league)
+bets::fbref_data %>% count(league)
+
+buch_names <- bets::hist_buch_data %>%
+  filter(league == 'MLS') %>%
+  count(home) %>%
+  select(buch = home, nbu = n)
+
+fbref_names <- bets::fbref_data %>%
+  filter(league == 'Major League Soccer') %>%
+  count(home) %>%
+  select(fbref = home, nref = n)
+
+fbref_names %>%
+  filter(!(fbref %in% buch_names$buch))
+
+buch_names %>%
+  bind_cols(fbref_names)
+
+data %>% skimr::skim()
 
 data <- data %>%
   filter(case_when(league %in% c("E1", "N1", "P1") ~ season != "1718",
@@ -63,7 +69,7 @@ leagues %>%
   unnest(data) %>%
   skimr::skim()
 
-rm(data)
+rm(data, fbref_names, problems, buch_names)
 
 weights <- t(replicate(1000, diff(c(0, sort(runif(2)), 1))) ) %>%
   as_tibble() %>%
@@ -77,7 +83,7 @@ weights
 library(foreach)
 library(doParallel)
 # Register parallel backend
-cl <- makeCluster(10)
+cl <- makeCluster(2)
 registerDoParallel(cl)
 clusterEvalQ(cl, {
   library(tidyverse)
@@ -105,7 +111,7 @@ foreach(row = seq_len(nrow(leagues))) %dopar% {
                                 'day',
                                 lookback = Inf,
                                 assess_stop = 1,
-                                skip = 30,
+                                skip = 35,
                                 step = 1) %>%
         filter(map_dbl(splits, ~ nrow(rsample::testing(.))) > 0)
 
