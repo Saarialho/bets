@@ -21,20 +21,21 @@ find_bets <- function(arviot, totals = TRUE){
 
     hist_bets <- qs::qread("~/Documents/bets/output/multimodel_bets.rds")
 
-    clv_model <- qs::qread(here::here('output', 'clv_reg.rds'))
+    clv_fit <- qs::qread(here::here('output', 'clv_fit.rds'))
+
     to_predict <- arviot %>%
       dplyr::mutate(moneyline = dplyr::case_when(kohde == '1' ~ mlh,
                                                  kohde == '2' ~ mld,
                                                  TRUE ~ mla)) %>%
-      dplyr::mutate(moneyline = log(moneyline),
-                    maxbet = log(maxbet),
-                    plus_ev = factor(dplyr::if_else(EV > 0, 1, 0)))
+      dplyr::mutate(plus_ev = factor(dplyr::if_else(EV >= 0, 1, 0)))
 
-    clv_pred <- predict(clv_model, to_predict)
+
+    clv_pred <- predict(clv_fit, to_predict)
     clv_pred <- tibble::tibble(clv_pred)
 
     arviot <- arviot %>%
-      dplyr::bind_cols(clv_pred)
+      dplyr::bind_cols(clv_pred) %>%
+      dplyr::rename(clv_pred = .pred)
 
     betit <- arviot %>%
       dplyr::filter(clv_pred >= 0.015, dts >= 1) %>%

@@ -63,7 +63,7 @@ aggregate_predictions <- function(preds, totals = FALSE){
     spreads <- preds %>%
       dplyr::select(date, team1, team2, periods.spreads) %>%
       dplyr::distinct(date, team1, team2, .keep_all = TRUE)
-    #ei summaa arg liigan osalta 100 koska se ei ole mukana BT. Pitaa tehda BT sen kanssa.
+
     arviot <- preds %>%
       dplyr::select(-teams) %>%
       tidyr::pivot_longer(cols = p1:p2, names_to = 'pred_side', values_to = 'pred') %>%
@@ -111,8 +111,8 @@ aggregate_predictions <- function(preds, totals = FALSE){
                                  EV == EV1_hdp ~ home,
                                  EV == EV2_hdp ~ away),
              kohde = factor(dplyr::case_when(EV == EV1 | EV == EV1_hdp ~ 1,
-                                      EV == EVD ~ 2,
-                                      TRUE ~ 3)),
+                                             EV == EV2 | EV == EV2_hdp ~ 3,
+                                      TRUE ~ 2)),
              dts = as.numeric(date-Sys.Date()),
              id = paste(date, team1, team2, sep = "-"), .by = c(team1, date)) %>%
       dplyr::mutate(dplyr::across(where(is.numeric), ~round(., 3))) %>%

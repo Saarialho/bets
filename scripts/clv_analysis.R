@@ -1,4 +1,4 @@
-pacman::p_load(bets, tidyverse, implied)
+pacman::p_load(bets, tidyverse, implied, tidymodels)
 
 urls <-
   tibble::tribble(
@@ -9,6 +9,7 @@ urls <-
 hist_buch_data <- get_historical_buchdata(urls)
 
 hist_bets <- qs::qread(file.path("~/Documents/bets/output", "multimodel_bets.rds")) %>%
+  replace_team_names(team1, team2, 'Vasco da Gama', 'Vasco Da Gama') %>%
   replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
   mutate(date_start = date - 5,
                 date_end = date + 5) %>%
@@ -118,6 +119,7 @@ hist_bets %>%
 
 # ---- arviot ----
 hist_arviot <- qs::qread(file.path("~/Documents/bets/output", "multimodel_arviot.rds")) %>%
+  replace_team_names(team1, team2, 'Vasco da Gama', 'Vasco Da Gama') %>%
   replace_team_names(team1, team2, team_dictionary()$pin_name, team_dictionary()$buch_name) %>%
   mutate(date_start = date - 5,
          date_end = date + 5) %>%
@@ -146,12 +148,19 @@ hist_arviot <- hist_arviot %>%
          kohde = case_when(name == 'EV1' ~ 1,
                            name == 'EVD' ~ 2,
                            TRUE ~ 3)) %>%
-  mutate(moneyline = log(moneyline),
-         maxbet = log(maxbet),
-         dts = log(dts),
-         kohde = factor(kohde),
-         plus_ev = factor(if_else(EV > 0, 1, 0)),
+  mutate(kohde = factor(kohde),
+         plus_ev = factor(if_else(EV >= 0, 1, 0)),
          EV_sqrd = EV^2)
+
+#TSEK NAMA NIMET
+hist_arviot %>%
+  filter(is.na(clv)) %>%
+  select(team1, team2) %>%
+  pivot_longer(everything()) %>%
+  count(value)
+
+hist_arviot <- hist_arviot %>%
+  filter(!is.na(EV))
 
 # hist_arviot <- hist_arviot %>%
 #   mutate(clv = datawizard::winsorize(clv, threshold = 0.005),
@@ -175,6 +184,51 @@ clv_reg <- lm(clv ~ EV + kohde + moneyline + plus_ev:EV + moneyline:EV + EV:leag
 clv_reg %>% summary()
 qs::qsave(clv_reg, file = here::here('output', 'clv_reg.rds'))
 
+model_df <- hist_arviot %>%
+  select(league, kohde, EV, clv, plus_ev, maxbet, league, moneyline)
+
+all_rec <-
+  recipe(model_df %>% dplyr::slice(0)) %>%
+  update_role(everything()) %>%
+  update_role(clv, new_role = "outcome") %>%
+  step_novel(all_nominal_predictors(), new_level='Unseen') %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_interact(terms = ~ EV:maxbet) %>%
+  step_interact(terms = ~ EV:moneyline) %>%
+  step_interact(terms = ~ EV:plus_ev) %>%
+  step_interact(terms = ~ EV:league) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+model_spec <-
+  linear_reg() %>%
+  set_engine("lm")
+
+clv_workflow <-
+  workflow() %>%
+  add_recipe(all_rec) %>%
+  add_model(model_spec)
+
+clv_fit <- fit(clv_workflow, hist_arviot)
+
+clv_fit$fit$fit$fit %>% summary()
+clv_reg %>% summary()
+
+
+clv_fit %>%
+  tidy() %>%
+  left_join(clv_reg %>%
+              tidy() %>%
+              select(term, clv_reg = estimate)) %>%
+  mutate(abs_tstat = abs(statistic)) %>%
+  arrange(desc(abs_tstat)) %>%
+  na.omit()
+
+
+clv_fit <- clv_fit %>%
+  butcher::butcher()
+
+qs::qsave(clv_fit, file = here::here('output', 'clv_fit.rds'))
 
 clv_reg %>% performance::check_autocorrelation()
 clv_reg %>% performance::check_collinearity()
@@ -191,6 +245,14 @@ summary(lm(clv ~ EV + kohde + moneyline + plus_ev:EV + EV:league, data = hist_ar
 summary(lm(clv ~ EV + kohde + moneyline + plus_ev:EV + moneyline:EV, data = hist_arviot))
 summary(lm(clv ~ EV + kohde + moneyline + plus_ev:EV + moneyline:EV + EV:league, data = hist_arviot))
 summary(lm(clv ~ EV + kohde + moneyline + plus_ev:EV + moneyline:EV + EV:league + EV:maxbet, data = hist_arviot))
+
+hist_arviot %>%
+  mutate(EV = datawizard::winsorize(EV, 0.0025)) %>%
+  ggplot(aes(EV, clv)) +
+  geom_point(alpha = 1 / 10, cex = 1) +
+  labs(y = "Closing line value", x = "Expected value") +
+  geom_smooth(se = FALSE, col = "red")+
+  geom_smooth(se = FALSE, col = "blue", method = 'lm')
 
 hist_arviot %>%
   #ggstatsplot::grouped_ggscatterstats(x = EV, y = clv, grouping.var = name) %>%
@@ -214,101 +276,129 @@ hist_bets %>%
 #   ggstatsplot::ggscatterstats(x = EV, y = clv)
 #
 #
-# library(tidymodels)
-#
-# train_data <- hist_arviot %>%
-#   select(league, kohde, EV, clv, plus_ev, maxbet, league, moneyline) %>%
-#   na.omit()
 
-# model_spec <-
-#   linear_reg(penalty = tune::tune(), mixture = 1) %>%
-#   set_engine("glmnet", lower.limits = 0, lambda.min.ratio = 0)
+train_data <- hist_arviot %>%
+  select(league, kohde, EV, clv, plus_ev, maxbet, league, moneyline) %>%
+  na.omit()
 
-# model_spec <-
-#   linear_reg() %>%
-#   set_engine("lm")
-#
-# model_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
-#   update_role(everything()) %>%
-#   update_role(clv, new_role = "outcome") %>%
-#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-#   step_dummy(all_nominal_predictors()) %>%
-#   step_zv(all_numeric_predictors())
-#
-# league_rec <-
-#   recipe(train_data %>% dplyr::slice(0)) %>%
-#   update_role(everything()) %>%
-#   update_role(clv, new_role = "outcome") %>%
-#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-#   step_interact(terms = ~ EV:league) %>%
-#   step_dummy(all_nominal_predictors()) %>%
-#   step_zv(all_numeric_predictors())
-#
-# plus_rec <-
-#   recipe(train_data %>% dplyr::slice(0)) %>%
-#   update_role(everything()) %>%
-#   update_role(clv, new_role = "outcome") %>%
-#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-#   step_interact(terms = ~ plus_ev:EV) %>%
-#   step_dummy(all_nominal_predictors()) %>%
-#   step_zv(all_numeric_predictors())
-#
-# maxbet_rec <-
-#   recipe(train_data %>% dplyr::slice(0)) %>%
-#   update_role(everything()) %>%
-#   update_role(clv, new_role = "outcome") %>%
-#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-#   step_interact(terms = ~ EV:maxbet) %>%
-#   step_dummy(all_nominal_predictors()) %>%
-#   step_zv(all_numeric_predictors())
-#
-# all_rec <-
-#   recipe(train_data %>% dplyr::slice(0)) %>%
-#   update_role(everything()) %>%
-#   update_role(clv, new_role = "outcome") %>%
-#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-#   step_interact(terms = ~ EV:maxbet) %>%
-#   step_interact(terms = ~ EV:plus_ev) %>%
-#   step_interact(terms = ~ EV:league) %>%
-#   step_dummy(all_nominal_predictors()) %>%
-#   step_zv(all_numeric_predictors())
-#
-# all_possible <-
-#   recipe(train_data %>% dplyr::slice(0)) %>%
-#   update_role(everything()) %>%
-#   update_role(clv, new_role = "outcome") %>%
-#   step_novel(all_nominal_predictors(), new_level='Unseen') %>%
-#   step_interact(terms = ~ EV:maxbet) %>%
-#   step_interact(terms = ~ EV:plus_ev) %>%
-#   step_interact(terms = ~ EV:league) %>%
-#   step_interact(terms = ~ EV:moneyline) %>%
-#   step_interact(terms = ~ EV:kohde) %>%
-#   step_dummy(all_nominal_predictors()) %>%
-#   step_zv(all_numeric_predictors())
-#
-# wfset <-
-#   workflow_set(
-#     preproc = list(norm = model_rec, league = league_rec, maxbet = maxbet_rec, plus = plus_rec,
-#                    all = all_rec, kaikki = all_possible),
-#     models = list(lasso = model_spec)
-#   )
-# wfset
-#
-# options(tidymodels.dark = TRUE)
-#
-# tuned <-
-#   wfset %>%
-#   workflow_map(
-#     resamples = vfold_cv(train_data, v = 10, repeats = 3, strata = clv),
-#     #grid = 20,
-#     metrics = metric_set(rmse),
-#     control = control_grid(save_pred = FALSE, save_workflow = TRUE)
-#   )
-#
-# tuned %>%
-#   rank_results(select_best = TRUE)
+model_spec <-
+  linear_reg() %>%
+  set_engine("lm")
+
+base_rec <- recipe(train_data %>% dplyr::slice(0)) %>%
+  update_role(everything()) %>%
+  update_role(clv, new_role = "outcome") %>%
+  step_novel(all_nominal_predictors(), new_level='Unseen')
+
+model_rec <- base_rec %>%
+  step_log(moneyline, maxbet) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+league_rec <- base_rec %>%
+  step_log(moneyline, maxbet) %>%
+  step_interact(terms = ~ EV:league) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+plus_rec <-
+  base_rec %>%
+  step_log(moneyline, maxbet) %>%
+  step_interact(terms = ~ plus_ev:EV) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+maxbet_rec <-
+  base_rec %>%
+  step_log(moneyline, maxbet) %>%
+  step_interact(terms = ~ EV:maxbet) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+all_rec <-
+  base_rec %>%
+  step_log(moneyline, maxbet) %>%
+  step_interact(terms = ~ EV:maxbet) %>%
+  step_interact(terms = ~ EV:plus_ev) %>%
+  step_interact(terms = ~ EV:league) %>%
+  step_interact(terms = ~ EV:moneyline) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+all_norm <-
+  base_rec %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_interact(terms = ~ EV:maxbet) %>%
+  step_interact(terms = ~ EV:plus_ev) %>%
+  step_interact(terms = ~ EV:league) %>%
+  step_interact(terms = ~ EV:moneyline) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
 
 
+all_norm_spline <-
+  base_rec %>%
+  step_interact(terms = ~ EV:maxbet) %>%
+  step_interact(terms = ~ EV:plus_ev) %>%
+  step_interact(terms = ~ EV:league) %>%
+  step_interact(terms = ~ EV:moneyline) %>%
+  step_spline_natural(EV, deg_free = 10) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_numeric_predictors())
+
+wfset <-
+  workflow_set(
+    preproc = list(norm = model_rec, league = league_rec, maxbet = maxbet_rec, plus = plus_rec,
+                   all = all_rec, spline = all_norm_spline, all_norm = all_norm),
+    models = list(lm = model_spec)
+  )
+wfset
+
+options(tidymodels.dark = TRUE)
+
+tuned <-
+  wfset %>%
+  workflow_map(
+    resamples = vfold_cv(train_data, v = 10, repeats = 2, strata = clv),
+    #grid = 20,
+    metrics = metric_set(rmse),
+    control = control_grid(save_pred = TRUE, save_workflow = TRUE)
+  )
+
+tuned %>%
+  rank_results(select_best = TRUE)
+
+tuned %>%
+  extract_workflow('all_norm_lm')
+
+valid_preds <- tuned %>%
+  collect_predictions() %>%
+  filter(wflow_id == 'all_norm_lm')
+
+valid_preds %>%
+  ggplot(aes(clv, .pred)) +
+  geom_abline(col = "green", lty = 2) +
+  geom_point(alpha = 0.4, cex = 1) +
+  geom_smooth(se = FALSE, col = "red") +
+  geom_smooth(se = FALSE, col = "blue", method = 'lm') +
+  coord_obs_pred() +
+  labs(x = "Predicted clv", y = "Observed clv")
+
+lin_reg_fit <- fit_best(tuned)
+lin_reg_coef <- tidy(lin_reg_fit)
+lin_reg_metrics <- collect_metrics(tuned)
+
+lm_cal <- cal_estimate_linear(valid_preds, truth = clv)
+
+valid_preds %>%
+  cal_apply(lm_cal) %>%
+  ggplot(aes(clv, .pred)) +
+  geom_abline(col = "green", lty = 2) +
+  geom_point(alpha = 0.4, cex = 1) +
+  geom_smooth(se = FALSE, col = "red") +
+  geom_smooth(se = FALSE, col = "blue", method = 'lm') +
+  coord_obs_pred() +
+  labs(x = "Predicted clv", y = "Observed clv")
 
 #
 #
