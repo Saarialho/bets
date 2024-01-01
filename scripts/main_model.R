@@ -3,7 +3,7 @@ pacman::p_load(bets, tidyverse)
 log_in_pinnacle()
 main_leagues_only <- T #vaihda tahan riippuen Buchdalin paivityksista
 exclude_leagues <- NULL
-exclude_leagues <- c("I2")
+exclude_leagues <- c('E0')
 extra_leagues <- c('Liga MX', 'MLS', 'Serie A', 'Liga Profesional')
 
 # mallien paramterit ----
@@ -20,7 +20,7 @@ totals_configs <- qs::qread(here::here('models', 'totals_lasso_models.rds')) %>%
 # liigojen haut ----
 #MIKA ITA 2
 league_specs <-
-  tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697, 1817, 2037, 9999),
+  tibble(league.id = c(2436, 2386, 1928, 2196, 1980, 2432, 2036, 1842, 1977, 1843, 2242, 2663, 1834, 210697, 1817, 2037, 2438),
          league = c('I1', 'P1', 'N1', 'SP1', 'E0', 'SP2', 'F1', 'D1', 'E1', 'D2', 'Liga MX', 'MLS', 'Serie A', 'Liga Profesional', 'B1', 'F2', 'I2'),
          fbref_cntry = c('ITA','POR','NED','ESP','ENG','ESP','FRA','GER','ENG','GER','MEX','USA','BRA','ARG','BEL','FRA','ITA'),
          tier = c('1st','1st','1st','1st','1st','2nd','1st','1st','2nd','2nd','1st','1st','1st','1st','1st','2nd','2nd'))
